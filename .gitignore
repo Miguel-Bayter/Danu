@@ -1,0 +1,143 @@
+# ─── Dependencias ────────────────────────────────────────────
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# ─── Next.js / Turbopack ─────────────────────────────────────
+/.next/
+/out/
+.turbo/
+
+# ─── Build ───────────────────────────────────────────────────
+/build
+/dist
+
+# ─── Testing ─────────────────────────────────────────────────
+/coverage
+/playwright-report
+/test-results
+*.snap
+
+# ─── TypeScript ──────────────────────────────────────────────
+*.tsbuildinfo
+next-env.d.ts
+
+# ═══════════════════════════════════════════════════════════════
+# SEGURIDAD — nunca subir al repositorio
+# ═══════════════════════════════════════════════════════════════
+
+# Variables de entorno (contienen IPs, URLs, passwords, tokens)
+.env
+.env*
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Claves privadas y certificados
+*.pem
+*.key
+*.p12
+*.pfx
+*.p8
+*.cer
+*.crt
+*.der
+
+# Credenciales de servicios en la nube
+serviceAccountKey.json
+service-account.json
+firebase-adminsdk*.json
+google-services.json
+google-credentials.json
+*-credentials.json
+credentials.json
+gcp-key.json
+aws-credentials
+.aws/
+
+# Tokens de herramientas
+.sentryclirc
+.npmrc
+.netrc
+auth.json
+
+# Archivos de secretos / carpetas privadas
+secrets/
+private/
+credentials/
+config/local/
+*.secret
+
+# ─── Base de datos ───────────────────────────────────────────
+# Exportaciones/dumps pueden contener IPs, emails y datos de usuarios
+*.sql
+*.dump
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+prisma/migrations/dev/
+
+# ─── Logs (pueden contener IPs, tokens, stack traces con rutas) ──
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# ─── Archivos de backup y temporales ─────────────────────────
+*.bak
+*.backup
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# ─── Docker (override puede tener credenciales) ──────────────
+docker-compose.override.yml
+docker-compose.local.yml
+.docker/
+
+# ─── Vercel ──────────────────────────────────────────────────
+.vercel
+
+# ─── Claude Code ─────────────────────────────────────────────
+.claude
+
+# ─── Docs internas del proyecto ──────────────────────────────
+Docs
+
+# ─── IDEs ────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.workspace
+
+# ─── macOS ───────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ─── Windows ─────────────────────────────────────────────────
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# ─── Linux ───────────────────────────────────────────────────
+*~
+.fuse_hidden*
+.Trash-*
