@@ -161,6 +161,34 @@ export const taskRepository = {
     return { score, total, done, overdue }
   },
 
+  findCompletedThisWeek(workspaceId: string) {
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+    return prisma.task.findMany({
+      where: {
+        project: { workspaceId },
+        completedAt: { gte: sevenDaysAgo },
+        parentId: null,
+      },
+      include: { assignee: true, project: { select: { name: true, color: true } } },
+      orderBy: { completedAt: 'desc' },
+      take: 20,
+    })
+  },
+
+  findOverdueByWorkspace(workspaceId: string) {
+    return prisma.task.findMany({
+      where: {
+        project: { workspaceId },
+        dueDate: { lt: new Date() },
+        status: { not: TaskStatus.DONE },
+        parentId: null,
+      },
+      include: { assignee: true, project: { select: { name: true, color: true } } },
+      orderBy: { dueDate: 'asc' },
+      take: 20,
+    })
+  },
+
   findUrgentByWorkspace(workspaceId: string, limit = 5) {
     return prisma.task.findMany({
       where: {

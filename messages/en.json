@@ -1,0 +1,202 @@
+{
+  "errors": {
+    "notFound": "Element not found",
+    "notMember": "You are not a member of this workspace",
+    "insufficientPermissions": "You don't have sufficient permissions",
+    "nameTooShort": "Name must be at least 2 characters",
+    "endDateBeforeStart": "End date cannot be before start date",
+    "onlyOwnerCanDelete": "Only the owner can delete the workspace",
+    "cannotRemoveOwner": "Cannot remove the owner",
+    "cannotAssignOwner": "Cannot assign the OWNER role",
+    "generic": "An unexpected error occurred"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Danu",
+      "subtitle": "Project management for teams",
+      "githubButton": "Continue with GitHub"
+    }
+  },
+  "sidebar": {
+    "workspacesLabel": "Workspaces",
+    "noWorkspaces": "No workspaces yet",
+    "signOut": "Sign out",
+    "myWorkspaces": "My Workspaces"
+  },
+  "dashboard": {
+    "title": "My Workspaces",
+    "subtitleEmpty": "Create your first workspace to get started",
+    "subtitleCount_one": "{count} workspace",
+    "subtitleCount_other": "{count} workspaces",
+    "emptyTitle": "You have no workspaces yet",
+    "emptyDescription": "Create one to start managing projects with your team."
+  },
+  "workspace": {
+    "newButton": "+ New workspace",
+    "createTitle": "New workspace",
+    "nameLabel": "Name",
+    "namePlaceholder": "My team",
+    "cancelButton": "Cancel",
+    "createButton": "Create",
+    "errorGeneric": "Error creating workspace",
+    "members_one": "{count} member",
+    "members_other": "{count} members",
+    "projects_one": "{count} project",
+    "projects_other": "{count} projects",
+    "noProjects": "No projects yet",
+    "noProjectsDescription": "Projects will appear here.",
+    "metricsTotal": "Total tasks",
+    "metricsDone": "Completed",
+    "metricsOverdue": "Overdue",
+    "metricsActiveProjects": "Active projects",
+    "urgentTitle": "Urgent / high priority tasks",
+    "noUrgent": "No urgent tasks",
+    "allProjectsTitle": "Projects",
+    "noDueDate": "No due date",
+    "timelineButton": "Timeline",
+    "deleteButton": "Delete workspace",
+    "deleteConfirm": "Are you sure? This will permanently delete the workspace and all its projects and tasks. This action cannot be undone.",
+    "deleteTitle": "Danger zone"
+  },
+  "project": {
+    "newButton": "+ New project",
+    "createTitle": "New project",
+    "editTitle": "Edit project",
+    "nameLabel": "Name",
+    "namePlaceholder": "My project",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Optional description...",
+    "colorLabel": "Color",
+    "startDateLabel": "Start date",
+    "endDateLabel": "End date",
+    "cancelButton": "Cancel",
+    "createButton": "Create project",
+    "saveButton": "Save changes",
+    "deleteButton": "Delete project",
+    "deleteConfirm": "Delete this project? This action cannot be undone.",
+    "tasks_one": "{count} task",
+    "tasks_other": "{count} tasks",
+    "createSuccess": "Project created successfully",
+    "noTasks": "No tasks yet",
+    "noTasksDescription": "Create the first task for this project.",
+    "dangerZone": "Danger zone"
+  },
+  "task": {
+    "newButton": "+ New task",
+    "createTitle": "New task",
+    "editTitle": "Edit task",
+    "titleLabel": "Title",
+    "titlePlaceholder": "Task name",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Optional details...",
+    "priorityLabel": "Priority",
+    "statusLabel": "Status",
+    "assigneeLabel": "Assigned to",
+    "dueDateLabel": "Due date",
+    "cancelButton": "Cancel",
+    "createButton": "Create task",
+    "saveButton": "Save",
+    "deleteButton": "Delete",
+    "deleteConfirm": "Delete this task? This action cannot be undone.",
+    "unassigned": "— Unassigned —",
+    "dangerZone": "Danger zone",
+    "subtasksLabel": "Subtasks",
+    "subtasksCount": "{done}/{total} subtasks",
+    "commentsLabel": "Comments",
+    "addCommentPlaceholder": "Write a comment...",
+    "sendButton": "Send",
+    "status": {
+      "TODO": "To do",
+      "IN_PROGRESS": "In progress",
+      "IN_REVIEW": "In review",
+      "DONE": "Done"
+    },
+    "priority": {
+      "LOW": "Low",
+      "MEDIUM": "Medium",
+      "HIGH": "High",
+      "URGENT": "Urgent"
+    }
+  },
+  "notification": {
+    "title": "Notifications",
+    "markAllRead": "Mark all as read",
+    "empty": "No notifications",
+    "taskAssigned": "New task assigned",
+    "taskDueSoon": "Task due soon",
+    "taskOverdue": "Task overdue"
+  },
+  "healthScore": {
+    "title": "Team Health Score",
+    "excellent": "Excellent",
+    "good": "Good",
+    "atRisk": "At risk",
+    "critical": "Critical"
+  },
+  "invitation": {
+    "inviteButton": "Invite member",
+    "inviteTitle": "Invite to {workspace}",
+    "emailLabel": "GitHub username",
+    "emailPlaceholder": "octocat",
+    "emailHint": "For your reference only — anyone with the link can join",
+    "generateButton": "Generate link",
+    "cancelButton": "Cancel",
+    "closeButton": "Close",
+    "linkReady": "Share this link with the person you want to invite:",
+    "copyButton": "Copy",
+    "linkExpiry": "Expires in 7 days.",
+    "inviteAnother": "Invite another",
+    "errorGeneric": "Error generating the link"
+  },
+  "invite": {
+    "invalidTitle": "Invalid link",
+    "invalidMessage": "This invitation link is invalid or has expired.",
+    "genericError": "An unexpected error occurred. Contact the workspace administrator.",
+    "backToDashboard": "Go to dashboard"
+  },
+  "timeline": {
+    "title": "Timeline",
+    "projectColumn": "Project",
+    "today": "Today",
+    "noProjects": "No projects with dates",
+    "noProjectsDescription": "Assign start and end dates to your projects to see them here.",
+    "undatedProjects": "Projects without dates",
+    "todayLegend": "Today"
+  },
+  "commandPalette": {
+    "openPalette": "Search...",
+    "placeholder": "Search workspaces or projects...",
+    "empty": "No results",
+    "loading": "Loading...",
+    "workspaces": "Workspaces",
+    "projects": "Projects"
+  },
+  "report": {
+    "button": "Weekly report",
+    "generating": "Generating...",
+    "pdfTitle": "Weekly Report — Danu",
+    "pdfSummary": "Summary",
+    "pdfTotalTasks": "Total tasks",
+    "pdfCompleted": "Completed",
+    "pdfOverdue": "Overdue",
+    "pdfActiveProjects": "Active projects",
+    "pdfHealthScore": "Health Score",
+    "pdfCompletedSection": "Completed this week",
+    "pdfOverdueSection": "Overdue tasks",
+    "pdfNoCompleted": "No tasks completed this week.",
+    "pdfNoOverdue": "No overdue tasks. Excellent!",
+    "pdfGeneratedBy": "Generated by Danu",
+    "pdfDueLabel": "due"
+  },
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "close": "Close",
+    "search": "Search",
+    "noResults": "No results"
+  }
+}

@@ -20,7 +20,8 @@
   "sidebar": {
     "workspacesLabel": "Workspaces",
     "noWorkspaces": "Sin workspaces aún",
-    "signOut": "Cerrar sesión"
+    "signOut": "Cerrar sesión",
+    "myWorkspaces": "Mis Workspaces"
   },
   "dashboard": {
     "title": "Mis Workspaces",
@@ -51,7 +52,12 @@
     "urgentTitle": "Tareas urgentes / alta prioridad",
     "noUrgent": "Sin tareas urgentes",
     "allProjectsTitle": "Proyectos",
-    "noDueDate": "Sin fecha"
+    "noDueDate": "Sin fecha",
+    "timelineButton": "Timeline",
+    "deleteButton": "Eliminar workspace",
+    "deleteConfirm": "¿Estás seguro? Esto eliminará permanentemente el workspace y todos sus proyectos y tareas. Esta acción no se puede deshacer.",
+    "deleteTitle": "Zona de peligro",
+    "cancelButton": "Cancelar"
   },
   "project": {
     "newButton": "+ Nuevo proyecto",
@@ -71,8 +77,10 @@
     "deleteConfirm": "¿Eliminar este proyecto? Esta acción no se puede deshacer.",
     "tasks_one": "{count} tarea",
     "tasks_other": "{count} tareas",
+    "createSuccess": "Proyecto creado correctamente",
     "noTasks": "Sin tareas aún",
-    "noTasksDescription": "Crea la primera tarea para este proyecto."
+    "noTasksDescription": "Crea la primera tarea para este proyecto.",
+    "dangerZone": "Zona de peligro"
   },
   "task": {
     "newButton": "+ Nueva tarea",
@@ -114,7 +122,10 @@
   "notification": {
     "title": "Notificaciones",
     "markAllRead": "Marcar todo leído",
-    "empty": "Sin notificaciones"
+    "empty": "Sin notificaciones",
+    "taskAssigned": "Nueva tarea asignada",
+    "taskDueSoon": "Tarea próxima a vencer",
+    "taskOverdue": "Tarea vencida"
   },
   "healthScore": {
     "title": "Health Score del equipo",
@@ -126,13 +137,57 @@
   "invitation": {
     "inviteButton": "Invitar miembro",
     "inviteTitle": "Invitar a {workspace}",
-    "emailLabel": "Email",
-    "emailPlaceholder": "correo@ejemplo.com",
-    "sendButton": "Enviar invitación",
+    "emailLabel": "Usuario de GitHub",
+    "emailPlaceholder": "octocat",
+    "emailHint": "Solo para tu registro — cualquier persona con el link puede unirse",
+    "generateButton": "Generar link",
     "cancelButton": "Cancelar",
     "closeButton": "Cerrar",
-    "successMessage": "Invitación enviada a {email}",
-    "errorGeneric": "Error al enviar la invitación"
+    "linkReady": "Comparte este link con la persona a invitar:",
+    "copyButton": "Copiar",
+    "linkExpiry": "Expira en 7 días. Solo funciona para el email indicado.",
+    "inviteAnother": "Invitar otro",
+    "errorGeneric": "Error al generar el link"
+  },
+  "invite": {
+    "invalidTitle": "Enlace inválido",
+    "invalidMessage": "Este enlace de invitación no es válido o ha expirado.",
+    "genericError": "Ocurrió un error inesperado. Contacta al administrador del workspace.",
+    "backToDashboard": "Ir al dashboard"
+  },
+  "timeline": {
+    "title": "Timeline",
+    "projectColumn": "Proyecto",
+    "today": "Hoy",
+    "noProjects": "Sin proyectos con fechas",
+    "noProjectsDescription": "Asigna fechas de inicio y fin a tus proyectos para verlos aquí.",
+    "undatedProjects": "Proyectos sin fechas",
+    "todayLegend": "Hoy"
+  },
+  "commandPalette": {
+    "openPalette": "Buscar...",
+    "placeholder": "Buscar workspaces o proyectos...",
+    "empty": "Sin resultados",
+    "loading": "Cargando...",
+    "workspaces": "Workspaces",
+    "projects": "Proyectos"
+  },
+  "report": {
+    "button": "Reporte semanal",
+    "generating": "Generando...",
+    "pdfTitle": "Reporte Semanal — Danu",
+    "pdfSummary": "Resumen",
+    "pdfTotalTasks": "Total de tareas",
+    "pdfCompleted": "Completadas",
+    "pdfOverdue": "Vencidas",
+    "pdfActiveProjects": "Proyectos activos",
+    "pdfHealthScore": "Health Score",
+    "pdfCompletedSection": "Completadas esta semana",
+    "pdfOverdueSection": "Tareas vencidas",
+    "pdfNoCompleted": "Sin tareas completadas esta semana.",
+    "pdfNoOverdue": "Sin tareas vencidas. ¡Excelente!",
+    "pdfGeneratedBy": "Generado por Danu",
+    "pdfDueLabel": "vence"
   },
   "common": {
     "loading": "Cargando...",

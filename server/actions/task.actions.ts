@@ -36,7 +36,7 @@ export async function createTaskAction(
     await notificationRepository.create({
       userId: task.assigneeId,
       type: NotificationType.TASK_ASSIGNED,
-      title: 'Nueva tarea asignada',
+      title: 'notification.taskAssigned',
       body: task.title,
       linkUrl: `/dashboard/${workspaceSlug}/${projectId}`,
     })
@@ -85,7 +85,7 @@ export async function updateTaskAction(
     await notificationRepository.create({
       userId: newAssigneeId,
       type: NotificationType.TASK_ASSIGNED,
-      title: 'Nueva tarea asignada',
+      title: 'notification.taskAssigned',
       body: task.title,
       linkUrl: `/dashboard/${workspaceSlug}/${projectId}`,
     })

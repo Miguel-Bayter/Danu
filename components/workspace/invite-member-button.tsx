@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
-import { sendInvitationAction } from '@/server/actions/invitation.actions'
+import { generateInviteLinkAction } from '@/server/actions/invitation.actions'
+import { Copy, Check } from 'lucide-react'
 
 interface InviteMemberButtonProps {
   workspaceId: string
@@ -12,16 +13,22 @@ interface InviteMemberButtonProps {
 export function InviteMemberButton({ workspaceId, workspaceName }: InviteMemberButtonProps) {
   const t = useTranslations('invitation')
   const [open, setOpen] = useState(false)
-  const [email, setEmail] = useState('')
-  const [success, setSuccess] = useState(false)
+  const [githubUser, setGithubUser] = useState('')
+  const [inviteUrl, setInviteUrl] = useState<string | null>(null)
+  const [copied, setCopied] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
 
   function handleOpen() {
     setOpen(true)
-    setSuccess(false)
+    setInviteUrl(null)
     setError(null)
-    setEmail('')
+    setGithubUser('')
+    setCopied(false)
+  }
+
+  function handleClose() {
+    setOpen(false)
   }
 
   function handleSubmit(e: React.FormEvent) {
@@ -29,12 +36,19 @@ export function InviteMemberButton({ workspaceId, workspaceName }: InviteMemberB
     setError(null)
     startTransition(async () => {
       try {
-        await sendInvitationAction(workspaceId, email)
-        setSuccess(true)
+        const result = await generateInviteLinkAction(workspaceId, githubUser)
+        setInviteUrl(result.inviteUrl)
       } catch (err) {
         setError(err instanceof Error ? err.message : t('errorGeneric'))
       }
     })
+  }
+
+  async function handleCopy() {
+    if (!inviteUrl) return
+    await navigator.clipboard.writeText(inviteUrl)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
   }
 
   return (
@@ -51,36 +65,25 @@ export function InviteMemberButton({ workspaceId, workspaceName }: InviteMemberB
           <div className="bg-card border rounded-xl p-6 w-full max-w-sm shadow-xl space-y-4">
             <h2 className="font-semibold">{t('inviteTitle', { workspace: workspaceName })}</h2>
 
-            {success ? (
-              <div className="space-y-3">
-                <p className="text-sm text-green-600 dark:text-green-400">
-                  {t('successMessage', { email })}
-                </p>
-                <button
-                  onClick={() => setOpen(false)}
-                  className="w-full py-2 rounded-md border hover:bg-accent transition-colors text-sm"
-                >
-                  {t('closeButton')}
-                </button>
-              </div>
-            ) : (
+            {!inviteUrl ? (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium mb-1">{t('emailLabel')}</label>
                   <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    type="text"
+                    value={githubUser}
+                    onChange={(e) => setGithubUser(e.target.value)}
                     placeholder={t('emailPlaceholder')}
                     required
                     className="w-full px-3 py-2 border rounded-md text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary/30"
                   />
+                  <p className="text-xs text-muted-foreground mt-1">{t('emailHint')}</p>
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
                 <div className="flex gap-2">
                   <button
                     type="button"
-                    onClick={() => setOpen(false)}
+                    onClick={handleClose}
                     className="flex-1 py-2 rounded-md border hover:bg-accent transition-colors text-sm"
                   >
                     {t('cancelButton')}
@@ -90,10 +93,46 @@ export function InviteMemberButton({ workspaceId, workspaceName }: InviteMemberB
                     disabled={isPending}
                     className="flex-1 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium disabled:opacity-50 transition-opacity"
                   >
-                    {isPending ? '...' : t('sendButton')}
+                    {isPending ? '...' : t('generateButton')}
                   </button>
                 </div>
               </form>
+            ) : (
+              <div className="space-y-4">
+                <div>
+                  <p className="text-sm text-muted-foreground mb-2">{t('linkReady')}</p>
+                  <div className="flex items-center gap-2 p-2.5 border rounded-lg bg-muted/40">
+                    <span className="text-xs font-mono flex-1 truncate text-muted-foreground">
+                      {inviteUrl}
+                    </span>
+                    <button
+                      onClick={handleCopy}
+                      className="shrink-0 p-1 rounded hover:bg-accent transition-colors"
+                      aria-label={t('copyButton')}
+                    >
+                      {copied
+                        ? <Check className="w-4 h-4 text-green-500" />
+                        : <Copy className="w-4 h-4 text-muted-foreground" />
+                      }
+                    </button>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1.5">{t('linkExpiry')}</p>
+                </div>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => { setInviteUrl(null); setGithubUser('') }}
+                    className="flex-1 py-2 rounded-md border hover:bg-accent transition-colors text-sm"
+                  >
+                    {t('inviteAnother')}
+                  </button>
+                  <button
+                    onClick={handleClose}
+                    className="flex-1 py-2 rounded-md bg-primary text-primary-foreground text-sm font-medium"
+                  >
+                    {t('closeButton')}
+                  </button>
+                </div>
+              </div>
             )}
           </div>
         </div>

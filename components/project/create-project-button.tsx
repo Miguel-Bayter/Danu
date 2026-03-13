@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
+import { toast } from 'sonner'
 import { createProjectAction } from '@/server/actions/project.actions'
 import { COLOR_OPTIONS } from '@/lib/constants'
 
@@ -13,19 +14,29 @@ interface CreateProjectButtonProps {
 export function CreateProjectButton({ workspaceId, workspaceSlug }: CreateProjectButtonProps) {
   const [open, setOpen] = useState(false)
   const [color, setColor] = useState(COLOR_OPTIONS[0])
-  const [error, setError] = useState('')
+  const [startDate, setStartDate] = useState('')
   const [loading, setLoading] = useState(false)
   const t = useTranslations('project')
+  const te = useTranslations('errors')
+
+  const today = new Date().toISOString().split('T')[0]
+
+  function toastError(e: unknown) {
+    const msg = e instanceof Error ? e.message : 'generic'
+    const key = msg.startsWith('errors.') ? msg.slice(7) : 'generic'
+    toast.error(te(key))
+  }
 
   async function handleSubmit(formData: FormData) {
-    setError('')
     setLoading(true)
     formData.set('color', color)
     try {
       await createProjectAction(workspaceId, workspaceSlug, formData)
       setOpen(false)
+      toast.success(t('createSuccess'))
     } catch (e) {
-      setError(e instanceof Error ? e.message : t('cancelButton'))
+      if (e instanceof Error && 'digest' in e) throw e
+      toastError(e)
     } finally {
       setLoading(false)
     }
@@ -95,6 +106,9 @@ export function CreateProjectButton({ workspaceId, workspaceSlug }: CreateProjec
               <input
                 name="startDate"
                 type="date"
+                min={today}
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
@@ -103,12 +117,11 @@ export function CreateProjectButton({ workspaceId, workspaceSlug }: CreateProjec
               <input
                 name="endDate"
                 type="date"
+                min={startDate || today}
                 className="w-full px-3 py-2 border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
           </div>
-
-          {error && <p className="text-sm text-red-500">{error}</p>}
 
           <div className="flex gap-2 justify-end">
             <button

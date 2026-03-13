@@ -4,11 +4,14 @@ import { taskRepository } from '@/server/repositories/task.repository'
 import { CreateProjectButton } from '@/components/project/create-project-button'
 import { ProjectCard } from '@/components/project/project-card'
 import { InviteMemberButton } from '@/components/workspace/invite-member-button'
+import { WeeklyReportButton } from '@/components/workspace/weekly-report-button'
+import { DeleteWorkspaceButton } from '@/components/workspace/delete-workspace-button'
 import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { WorkspaceRole, Priority } from '@prisma/client'
 import { PRIORITY_COLORS, APP_LOCALE } from '@/lib/constants'
+import { CalendarDays } from 'lucide-react'
 
 interface WorkspacePageProps {
   params: Promise<{ slug: string }>
@@ -39,11 +42,11 @@ export default async function WorkspacePage({ params }: WorkspacePageProps) {
   const canInvite = role === WorkspaceRole.OWNER || role === WorkspaceRole.ADMIN
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="max-w-5xl mx-auto space-y-8">
 
         {/* Header */}
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl font-bold">{workspace.name}</h1>
             <p className="text-muted-foreground text-sm mt-1">
@@ -56,7 +59,15 @@ export default async function WorkspacePage({ params }: WorkspacePageProps) {
                 : t('projects_other', { count: projects.length })}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <WeeklyReportButton workspaceId={workspace.id} workspaceName={workspace.name} />
+            <Link
+              href={`/dashboard/${slug}/timeline`}
+              className="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-md border hover:bg-accent transition-colors"
+            >
+              <CalendarDays className="w-4 h-4" />
+              {t('timelineButton')}
+            </Link>
             {canInvite && (
               <InviteMemberButton workspaceId={workspace.id} workspaceName={workspace.name} />
             )}
@@ -151,6 +162,11 @@ export default async function WorkspacePage({ params }: WorkspacePageProps) {
               ))}
             </div>
           </div>
+        )}
+
+        {/* Danger zone — owner only */}
+        {role === WorkspaceRole.OWNER && (
+          <DeleteWorkspaceButton workspaceId={workspace.id} />
         )}
 
         {/* Projects */}

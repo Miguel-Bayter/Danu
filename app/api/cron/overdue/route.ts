@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
     await notificationRepository.create({
       userId: task.assigneeId,
       type: NotificationType.TASK_OVERDUE,
-      title: 'Tarea vencida',
+      title: 'notification.taskOverdue',
       body: task.title,
       linkUrl: `/dashboard/${task.project.workspace.slug}/${task.projectId}`,
     })

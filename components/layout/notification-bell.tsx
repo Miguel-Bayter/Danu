@@ -9,8 +9,14 @@ import {
   markAllNotificationsReadAction,
   markNotificationReadAction,
 } from '@/server/actions/notification.actions'
-import type { Notification } from '@prisma/client'
+import type { Notification, NotificationType } from '@prisma/client'
 import { APP_LOCALE } from '@/lib/constants'
+
+const NOTIFICATION_KEY_MAP: Partial<Record<NotificationType, string>> = {
+  TASK_ASSIGNED: 'taskAssigned',
+  TASK_DUE_SOON: 'taskDueSoon',
+  TASK_OVERDUE: 'taskOverdue',
+}
 
 export function NotificationBell({ userId }: { userId: string }) {
   const t = useTranslations('notification')
@@ -96,7 +102,9 @@ export function NotificationBell({ userId }: { userId: string }) {
                     !n.read ? 'bg-primary/5' : ''
                   }`}
                 >
-                  <p className={`text-sm ${!n.read ? 'font-medium' : ''}`}>{n.title}</p>
+                  <p className={`text-sm ${!n.read ? 'font-medium' : ''}`}>
+                    {NOTIFICATION_KEY_MAP[n.type] ? t(NOTIFICATION_KEY_MAP[n.type] as Parameters<typeof t>[0]) : n.title}
+                  </p>
                   {n.body && <p className="text-xs text-muted-foreground truncate">{n.body}</p>}
                   <p className="text-[10px] text-muted-foreground mt-0.5">
                     {new Date(n.createdAt).toLocaleDateString(APP_LOCALE)}

@@ -3,6 +3,7 @@
 import { use, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations } from 'next-intl'
+import { toast } from 'sonner'
 import { updateProjectAction, deleteProjectAction } from '@/server/actions/project.actions'
 import { COLOR_OPTIONS } from '@/lib/constants'
 
@@ -14,33 +15,40 @@ export default function ProjectSettingsPage({ params }: SettingsPageProps) {
   const { slug, projectId } = use(params)
   const router = useRouter()
   const t = useTranslations('project')
+  const te = useTranslations('errors')
   const [color, setColor] = useState(COLOR_OPTIONS[0])
+  const [startDate, setStartDate] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+
+  function toastError(e: unknown) {
+    const msg = e instanceof Error ? e.message : 'generic'
+    const key = msg.startsWith('errors.') ? msg.slice(7) : 'generic'
+    toast.error(te(key))
+  }
 
   async function handleUpdate(formData: FormData) {
-    setError('')
     setLoading(true)
     formData.set('color', color)
     try {
       await updateProjectAction(projectId, slug, formData)
+      toast.success(t('saveButton'))
       router.push(`/dashboard/${slug}/${projectId}`)
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Error')
+      if (e instanceof Error && 'digest' in e) throw e
+      toastError(e)
     } finally {
       setLoading(false)
     }
   }
 
   async function handleDelete() {
-    setError('')
     setLoading(true)
     try {
       await deleteProjectAction(projectId, slug)
     } catch (e) {
-      if (e instanceof Error && 'digest' in e) throw e // re-throw Next.js redirect
-      setError(e instanceof Error ? e.message : 'Error')
+      if (e instanceof Error && 'digest' in e) throw e
+      toastError(e)
       setLoading(false)
     }
   }
@@ -97,6 +105,8 @@ export default function ProjectSettingsPage({ params }: SettingsPageProps) {
               <input
                 name="startDate"
                 type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
                 className="w-full px-3 py-2 border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
@@ -105,12 +115,11 @@ export default function ProjectSettingsPage({ params }: SettingsPageProps) {
               <input
                 name="endDate"
                 type="date"
+                min={startDate || undefined}
                 className="w-full px-3 py-2 border rounded-lg text-sm bg-background focus:outline-none focus:ring-2 focus:ring-primary"
               />
             </div>
           </div>
-
-          {error && <p className="text-sm text-red-500">{error}</p>}
 
           <div className="flex gap-2 justify-end">
             <button
@@ -147,7 +156,6 @@ export default function ProjectSettingsPage({ params }: SettingsPageProps) {
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
           <div className="bg-card border rounded-xl p-6 w-full max-w-sm shadow-xl space-y-4">
             <p className="font-medium">{t('deleteConfirm')}</p>
-            {error && <p className="text-sm text-red-500">{error}</p>}
             <div className="flex gap-2 justify-end">
               <button
                 onClick={() => setConfirmDelete(false)}

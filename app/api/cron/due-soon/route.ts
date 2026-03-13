@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     await notificationRepository.create({
       userId: task.assigneeId,
       type: NotificationType.TASK_DUE_SOON,
-      title: 'Tarea próxima a vencer',
+      title: 'notification.taskDueSoon',
       body: task.title,
       linkUrl: `/dashboard/${task.project.workspace.slug}/${task.projectId}`,
     })

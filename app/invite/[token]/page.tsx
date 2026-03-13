@@ -1,6 +1,7 @@
-import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { acceptInvitation } from '@/server/services/invitation.service'
+import { getTranslations } from 'next-intl/server'
+import { acceptInvitationAction } from '@/server/actions/invitation.actions'
+import { auth } from '@/lib/auth'
 import Link from 'next/link'
 
 interface InvitePageProps {
@@ -10,24 +11,22 @@ interface InvitePageProps {
 export default async function InvitePage({ params }: InvitePageProps) {
   const { token } = await params
   const session = await auth()
+  const t = await getTranslations('invite')
 
   if (!session?.user?.id) {
     redirect(`/sign-in?callbackUrl=/invite/${token}`)
   }
 
   let workspaceSlug: string | null = null
-  let errorMessage: string | null = null
+  let errorKey: string | null = null
 
   try {
-    const workspace = await acceptInvitation(
-      token,
-      session.user.id,
-      session.user.email ?? '',
-    )
+    const workspace = await acceptInvitationAction(token)
     workspaceSlug = workspace.slug
   } catch (err) {
     if (err instanceof Error && 'digest' in err) throw err
-    errorMessage = err instanceof Error ? err.message : 'errors.generic'
+    const msg = err instanceof Error ? err.message : 'invite.genericError'
+    errorKey = msg === 'invitation.invalidToken' ? 'invalidMessage' : 'genericError'
   }
 
   if (workspaceSlug) {
@@ -40,14 +39,12 @@ export default async function InvitePage({ params }: InvitePageProps) {
         <div className="w-12 h-12 rounded-full bg-red-100 dark:bg-red-950/40 flex items-center justify-center mx-auto">
           <span className="text-red-600 dark:text-red-400 text-xl font-bold">!</span>
         </div>
-        <h1 className="text-xl font-bold">Enlace inválido</h1>
+        <h1 className="text-xl font-bold">{t('invalidTitle')}</h1>
         <p className="text-muted-foreground text-sm">
-          {errorMessage === 'invitation.invalidToken'
-            ? 'Este enlace de invitación no es válido o ha expirado.'
-            : 'Ocurrió un error inesperado. Contacta al administrador del workspace.'}
+          {t(errorKey === 'invalidMessage' ? 'invalidMessage' : 'genericError')}
         </p>
         <Link href="/dashboard" className="text-primary hover:underline text-sm">
-          Ir al dashboard
+          {t('backToDashboard')}
         </Link>
       </div>
     </div>

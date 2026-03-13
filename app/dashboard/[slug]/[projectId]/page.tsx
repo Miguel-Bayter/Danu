@@ -24,10 +24,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const t = await getTranslations('project')
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="max-w-6xl mx-auto space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <Link
               href={`/dashboard/${slug}`}
