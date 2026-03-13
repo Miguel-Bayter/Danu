@@ -9,7 +9,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: 'jwt' },
   callbacks: {
     jwt({ token, user }) {
-      // Al hacer sign in, persiste el id de BD en el token
+      // On sign in, persist the database user id into the token
       if (user) token.sub = user.id
       return token
     },

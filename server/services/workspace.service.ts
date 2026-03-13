@@ -17,7 +17,7 @@ export async function assertMemberRole(
   minRole: WorkspaceRole,
 ) {
   const member = await workspaceRepository.getMember(workspaceId, userId)
-  if (!member) throw new Error('No eres miembro de este workspace')
+  if (!member) throw new Error('errors.notMember')
 
   const hierarchy: Record<WorkspaceRole, number> = {
     OWNER: 4,
@@ -26,14 +26,14 @@ export async function assertMemberRole(
     VIEWER: 1,
   }
   if (hierarchy[member.role] < hierarchy[minRole]) {
-    throw new Error('No tienes permisos suficientes')
+    throw new Error('errors.insufficientPermissions')
   }
   return member
 }
 
 export async function createWorkspace(userId: string, name: string) {
   if (!name || name.trim().length < 2) {
-    throw new Error('El nombre debe tener al menos 2 caracteres')
+    throw new Error('errors.nameTooShort')
   }
 
   let slug = slugify(name)
@@ -46,7 +46,7 @@ export async function createWorkspace(userId: string, name: string) {
 export async function updateWorkspace(workspaceId: string, userId: string, name: string) {
   await assertMemberRole(workspaceId, userId, WorkspaceRole.ADMIN)
   if (!name || name.trim().length < 2) {
-    throw new Error('El nombre debe tener al menos 2 caracteres')
+    throw new Error('errors.nameTooShort')
   }
   return workspaceRepository.update(workspaceId, { name: name.trim() })
 }
@@ -54,7 +54,7 @@ export async function updateWorkspace(workspaceId: string, userId: string, name:
 export async function deleteWorkspace(workspaceId: string, userId: string) {
   const member = await assertMemberRole(workspaceId, userId, WorkspaceRole.OWNER)
   if (member.role !== WorkspaceRole.OWNER) {
-    throw new Error('Solo el owner puede eliminar el workspace')
+    throw new Error('errors.onlyOwnerCanDelete')
   }
   return workspaceRepository.delete(workspaceId)
 }
@@ -62,7 +62,7 @@ export async function deleteWorkspace(workspaceId: string, userId: string) {
 export async function removeMember(workspaceId: string, userId: string, targetUserId: string) {
   await assertMemberRole(workspaceId, userId, WorkspaceRole.ADMIN)
   const target = await workspaceRepository.getMember(workspaceId, targetUserId)
-  if (target?.role === WorkspaceRole.OWNER) throw new Error('No puedes eliminar al owner')
+  if (target?.role === WorkspaceRole.OWNER) throw new Error('errors.cannotRemoveOwner')
   return workspaceRepository.removeMember(workspaceId, targetUserId)
 }
 
@@ -73,7 +73,7 @@ export async function updateMemberRole(
   role: WorkspaceRole,
 ) {
   await assertMemberRole(workspaceId, userId, WorkspaceRole.ADMIN)
-  if (role === WorkspaceRole.OWNER) throw new Error('No puedes asignar el rol OWNER')
+  if (role === WorkspaceRole.OWNER) throw new Error('errors.cannotAssignOwner')
   return workspaceRepository.updateMemberRole(workspaceId, targetUserId, role)
 }
 

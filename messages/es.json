@@ -1,0 +1,148 @@
+{
+  "errors": {
+    "notFound": "Elemento no encontrado",
+    "notMember": "No eres miembro de este workspace",
+    "insufficientPermissions": "No tienes permisos suficientes",
+    "nameTooShort": "El nombre debe tener al menos 2 caracteres",
+    "endDateBeforeStart": "La fecha de fin no puede ser anterior a la de inicio",
+    "onlyOwnerCanDelete": "Solo el owner puede eliminar el workspace",
+    "cannotRemoveOwner": "No puedes eliminar al owner",
+    "cannotAssignOwner": "No puedes asignar el rol OWNER",
+    "generic": "Ocurrió un error inesperado"
+  },
+  "auth": {
+    "signIn": {
+      "title": "Danu",
+      "subtitle": "Gestión de proyectos para equipos",
+      "githubButton": "Continuar con GitHub"
+    }
+  },
+  "sidebar": {
+    "workspacesLabel": "Workspaces",
+    "noWorkspaces": "Sin workspaces aún",
+    "signOut": "Cerrar sesión"
+  },
+  "dashboard": {
+    "title": "Mis Workspaces",
+    "subtitleEmpty": "Crea tu primer workspace para comenzar",
+    "subtitleCount_one": "{count} workspace",
+    "subtitleCount_other": "{count} workspaces",
+    "emptyTitle": "No tienes workspaces aún",
+    "emptyDescription": "Crea uno para empezar a gestionar proyectos con tu equipo."
+  },
+  "workspace": {
+    "newButton": "+ Nuevo workspace",
+    "createTitle": "Nuevo workspace",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Mi equipo",
+    "cancelButton": "Cancelar",
+    "createButton": "Crear",
+    "errorGeneric": "Error al crear workspace",
+    "members_one": "{count} miembro",
+    "members_other": "{count} miembros",
+    "projects_one": "{count} proyecto",
+    "projects_other": "{count} proyectos",
+    "noProjects": "Sin proyectos aún",
+    "noProjectsDescription": "Los proyectos aparecerán aquí.",
+    "metricsTotal": "Total tareas",
+    "metricsDone": "Completadas",
+    "metricsOverdue": "Vencidas",
+    "metricsActiveProjects": "Proyectos activos",
+    "urgentTitle": "Tareas urgentes / alta prioridad",
+    "noUrgent": "Sin tareas urgentes",
+    "allProjectsTitle": "Proyectos",
+    "noDueDate": "Sin fecha"
+  },
+  "project": {
+    "newButton": "+ Nuevo proyecto",
+    "createTitle": "Nuevo proyecto",
+    "editTitle": "Editar proyecto",
+    "nameLabel": "Nombre",
+    "namePlaceholder": "Mi proyecto",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Descripción opcional...",
+    "colorLabel": "Color",
+    "startDateLabel": "Fecha de inicio",
+    "endDateLabel": "Fecha límite",
+    "cancelButton": "Cancelar",
+    "createButton": "Crear proyecto",
+    "saveButton": "Guardar cambios",
+    "deleteButton": "Eliminar proyecto",
+    "deleteConfirm": "¿Eliminar este proyecto? Esta acción no se puede deshacer.",
+    "tasks_one": "{count} tarea",
+    "tasks_other": "{count} tareas",
+    "noTasks": "Sin tareas aún",
+    "noTasksDescription": "Crea la primera tarea para este proyecto."
+  },
+  "task": {
+    "newButton": "+ Nueva tarea",
+    "createTitle": "Nueva tarea",
+    "editTitle": "Editar tarea",
+    "titleLabel": "Título",
+    "titlePlaceholder": "Nombre de la tarea",
+    "descriptionLabel": "Descripción",
+    "descriptionPlaceholder": "Detalles opcionales...",
+    "priorityLabel": "Prioridad",
+    "statusLabel": "Estado",
+    "assigneeLabel": "Asignado a",
+    "dueDateLabel": "Fecha límite",
+    "cancelButton": "Cancelar",
+    "createButton": "Crear tarea",
+    "saveButton": "Guardar",
+    "deleteButton": "Eliminar",
+    "deleteConfirm": "¿Eliminar esta tarea? Esta acción no se puede deshacer.",
+    "unassigned": "— Sin asignar —",
+    "dangerZone": "Zona de peligro",
+    "subtasksLabel": "Subtareas",
+    "subtasksCount": "{done}/{total} subtareas",
+    "commentsLabel": "Comentarios",
+    "addCommentPlaceholder": "Escribe un comentario...",
+    "sendButton": "Enviar",
+    "status": {
+      "TODO": "Por hacer",
+      "IN_PROGRESS": "En progreso",
+      "IN_REVIEW": "En revisión",
+      "DONE": "Completado"
+    },
+    "priority": {
+      "LOW": "Baja",
+      "MEDIUM": "Media",
+      "HIGH": "Alta",
+      "URGENT": "Urgente"
+    }
+  },
+  "notification": {
+    "title": "Notificaciones",
+    "markAllRead": "Marcar todo leído",
+    "empty": "Sin notificaciones"
+  },
+  "healthScore": {
+    "title": "Health Score del equipo",
+    "excellent": "Excelente",
+    "good": "Bueno",
+    "atRisk": "En riesgo",
+    "critical": "Crítico"
+  },
+  "invitation": {
+    "inviteButton": "Invitar miembro",
+    "inviteTitle": "Invitar a {workspace}",
+    "emailLabel": "Email",
+    "emailPlaceholder": "correo@ejemplo.com",
+    "sendButton": "Enviar invitación",
+    "cancelButton": "Cancelar",
+    "closeButton": "Cerrar",
+    "successMessage": "Invitación enviada a {email}",
+    "errorGeneric": "Error al enviar la invitación"
+  },
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "create": "Crear",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "noResults": "Sin resultados"
+  }
+}

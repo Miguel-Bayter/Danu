@@ -11,7 +11,15 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <div className="flex h-screen bg-background">
-      <Sidebar workspaces={workspaces} user={session.user} />
+      <Sidebar
+          workspaces={workspaces}
+          user={{
+            id: session.user!.id as string,
+            name: session.user!.name,
+            email: session.user!.email,
+            image: session.user!.image,
+          }}
+        />
       <main className="flex-1 overflow-auto">{children}</main>
     </div>
   )

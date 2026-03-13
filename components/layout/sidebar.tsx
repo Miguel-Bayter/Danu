@@ -3,17 +3,20 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
+import { useTranslations } from 'next-intl'
 import type { Workspace } from '@prisma/client'
+import { NotificationBell } from '@/components/layout/notification-bell'
 
 type WorkspaceWithCount = Workspace & { _count: { projects: number } }
 
 interface SidebarProps {
   workspaces: WorkspaceWithCount[]
-  user: { name?: string | null; email?: string | null; image?: string | null }
+  user: { id: string; name?: string | null; email?: string | null; image?: string | null }
 }
 
 export function Sidebar({ workspaces, user }: SidebarProps) {
   const pathname = usePathname()
+  const t = useTranslations('sidebar')
 
   return (
     <aside className="w-60 flex flex-col border-r bg-card shrink-0">
@@ -25,7 +28,7 @@ export function Sidebar({ workspaces, user }: SidebarProps) {
       {/* Nav */}
       <nav className="flex-1 overflow-y-auto p-3 space-y-1">
         <p className="text-xs font-medium text-muted-foreground px-2 py-1 uppercase tracking-wider">
-          Workspaces
+          {t('workspacesLabel')}
         </p>
 
         {workspaces.map((ws) => {
@@ -48,12 +51,12 @@ export function Sidebar({ workspaces, user }: SidebarProps) {
         })}
 
         {workspaces.length === 0 && (
-          <p className="text-xs text-muted-foreground px-2 py-1">Sin workspaces aún</p>
+          <p className="text-xs text-muted-foreground px-2 py-1">{t('noWorkspaces')}</p>
         )}
       </nav>
 
       {/* User footer */}
-      <div className="border-t p-3">
+      <div className="border-t p-3 space-y-1">
         <div className="flex items-center gap-2 px-2 py-1.5">
           {user.image ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -67,12 +70,13 @@ export function Sidebar({ workspaces, user }: SidebarProps) {
             <p className="text-sm font-medium truncate">{user.name}</p>
             <p className="text-xs text-muted-foreground truncate">{user.email}</p>
           </div>
+          <NotificationBell userId={user.id} />
         </div>
         <button
           onClick={() => signOut({ callbackUrl: '/sign-in' })}
-          className="mt-1 w-full text-left px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground rounded-md hover:bg-accent transition-colors"
+          className="w-full text-left px-2 py-1.5 text-xs text-muted-foreground hover:text-foreground rounded-md hover:bg-accent transition-colors"
         >
-          Cerrar sesión
+          {t('signOut')}
         </button>
       </div>
     </aside>

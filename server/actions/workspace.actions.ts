@@ -1,16 +1,10 @@
 'use server'
 
-import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { WorkspaceRole } from '@prisma/client'
 import * as workspaceService from '@/server/services/workspace.service'
-
-async function requireAuth() {
-  const session = await auth()
-  if (!session?.user?.id) redirect('/sign-in')
-  return session.user.id
-}
+import { requireAuth } from '@/server/lib/auth'
 
 export async function createWorkspaceAction(formData: FormData) {
   const userId = await requireAuth()
