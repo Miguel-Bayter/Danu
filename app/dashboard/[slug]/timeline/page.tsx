@@ -1,5 +1,6 @@
 import { getWorkspaceAction } from '@/server/actions/workspace.actions'
 import { projectRepository } from '@/server/repositories/project.repository'
+import { taskRepository } from '@/server/repositories/task.repository'
 import { GanttChart } from '@/components/workspace/gantt-chart'
 import { notFound } from 'next/navigation'
 
@@ -13,21 +14,43 @@ export default async function TimelinePage({ params }: TimelinePageProps) {
   if (!result) notFound()
 
   const { workspace } = result
-  const projects = await projectRepository.findByWorkspace(workspace.id)
+
+  const [projects, rawTasks] = await Promise.all([
+    projectRepository.findByWorkspace(workspace.id),
+    taskRepository.findByWorkspaceTimeline(workspace.id),
+  ])
 
   const ganttProjects = projects.map((p) => ({
-    id: p.id,
-    name: p.name,
-    color: p.color ?? '#6366f1',
+    id:        p.id,
+    name:      p.name,
+    color:     p.color ?? '#6366f1',
     startDate: p.startDate ? p.startDate.toISOString() : null,
-    endDate: p.endDate ? p.endDate.toISOString() : null,
+    endDate:   p.endDate   ? p.endDate.toISOString()   : null,
+  }))
+
+  const ganttTasks = rawTasks.map((t) => ({
+    id:          t.id,
+    title:       t.title,
+    priority:    t.priority as 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT',
+    status:      t.status  as 'TODO' | 'IN_PROGRESS' | 'IN_REVIEW' | 'DONE',
+    createdAt:   t.createdAt.toISOString(),
+    dueDate:     t.dueDate ? t.dueDate.toISOString() : null,
+    projectId:   t.project.id,
+    projectName: t.project.name,
+    projectColor: t.project.color ?? '#6366f1',
+    assignee: t.assignee
+      ? { id: t.assignee.id, name: t.assignee.name, image: t.assignee.image }
+      : null,
   }))
 
   return (
-    <div className="p-4 md:p-8">
-      <div className="max-w-5xl mx-auto">
-        <GanttChart projects={ganttProjects} />
-      </div>
+    <div className="h-full overflow-hidden">
+      <GanttChart
+        projects={ganttProjects}
+        tasks={ganttTasks}
+        slug={slug}
+        workspaceName={workspace.name}
+      />
     </div>
   )
 }

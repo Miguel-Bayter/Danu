@@ -47,73 +47,152 @@
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
+/* ─── Light mode — Warm Studio ─────────────────────────────────────────────── */
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.809 0.105 251.813);
-  --chart-2: oklch(0.623 0.214 259.815);
-  --chart-3: oklch(0.546 0.245 262.881);
-  --chart-4: oklch(0.488 0.243 264.376);
-  --chart-5: oklch(0.424 0.199 265.638);
+  /* Surfaces: warm off-white canvas, pure white cards */
+  --background:        oklch(0.974 0.004 270);
+  --foreground:        oklch(0.118 0.012 270);
+  --card:              oklch(1.0 0 0);
+  --card-foreground:   oklch(0.118 0.012 270);
+  --popover:           oklch(1.0 0 0);
+  --popover-foreground:oklch(0.118 0.012 270);
+
+  /* Brand: electric indigo */
+  --primary:           oklch(0.535 0.225 270);
+  --primary-foreground:oklch(0.99 0 0);
+
+  /* Supporting surfaces */
+  --secondary:         oklch(0.938 0.006 270);
+  --secondary-foreground: oklch(0.118 0.012 270);
+  --muted:             oklch(0.938 0.006 270);
+  --muted-foreground:  oklch(0.480 0.010 270);
+  --accent:            oklch(0.928 0.008 270);
+  --accent-foreground: oklch(0.118 0.012 270);
+
+  /* Semantic */
+  --destructive:       oklch(0.563 0.230 27);
+
+  /* Structure */
+  --border:            oklch(0.862 0.007 270);
+  --input:             oklch(0.896 0.005 270);
+  --ring:              oklch(0.535 0.225 270);
+
+  /* Radius */
   --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Sidebar: same canvas, barely distinct */
+  --sidebar:                    oklch(0.960 0.005 270);
+  --sidebar-foreground:         oklch(0.118 0.012 270);
+  --sidebar-primary:            oklch(0.535 0.225 270);
+  --sidebar-primary-foreground: oklch(0.99 0 0);
+  --sidebar-accent:             oklch(0.928 0.008 270);
+  --sidebar-accent-foreground:  oklch(0.118 0.012 270);
+  --sidebar-border:             oklch(0.875 0.006 270);
+  --sidebar-ring:               oklch(0.535 0.225 270);
+
+  /* Charts: indigo family */
+  --chart-1: oklch(0.535 0.225 270);
+  --chart-2: oklch(0.620 0.185 250);
+  --chart-3: oklch(0.488 0.180 290);
+  --chart-4: oklch(0.700 0.150 230);
+  --chart-5: oklch(0.420 0.200 285);
+
+  /* Status semantic (used in components via CSS vars) */
+  --status-success:     oklch(0.620 0.148 145);
+  --status-success-bg:  oklch(0.620 0.148 145 / 0.10);
+  --status-warning:     oklch(0.710 0.155 68);
+  --status-warning-bg:  oklch(0.710 0.155 68 / 0.10);
+  --status-danger:      oklch(0.635 0.188 18);
+  --status-danger-bg:   oklch(0.635 0.188 18 / 0.10);
+  --status-info:        oklch(0.680 0.160 230);
+  --status-info-bg:     oklch(0.680 0.160 230 / 0.10);
+
+  /* Celtic gold accent */
+  --gold:              oklch(0.62 0.15 75);
+  --gold-bg:           oklch(0.62 0.15 75 / 0.08);
 }
 
+/* ─── Dark mode — Obsidian Studio ──────────────────────────────────────────── */
+/*
+ * Dark mode contrast ratios (OKLCH lightness):
+ *   background 0.115  →  card 0.182  (Δ 0.067 — clearly legible layer separation)
+ *   card 0.182        →  popover 0.215 (Δ 0.033 — dropdown sits above card)
+ *   muted-fg 0.655    →  readable at 50% opacity (0.33 effective — passes AA at 14px+)
+ *   border 14% white  →  visible without harshness
+ */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.809 0.105 251.813);
-  --chart-2: oklch(0.623 0.214 259.815);
-  --chart-3: oklch(0.546 0.245 262.881);
-  --chart-4: oklch(0.488 0.243 264.376);
-  --chart-5: oklch(0.424 0.199 265.638);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Surfaces: obsidian depth with clear layer separation */
+  --background:        oklch(0.115 0.010 270);
+  --foreground:        oklch(0.965 0.005 270);
+  --card:              oklch(0.182 0.012 270);
+  --card-foreground:   oklch(0.960 0.005 270);
+  --popover:           oklch(0.215 0.012 270);
+  --popover-foreground:oklch(0.960 0.005 270);
+
+  /* Brand: luminous indigo */
+  --primary:           oklch(0.635 0.220 270);
+  --primary-foreground:oklch(0.10 0.005 270);
+
+  /* Supporting surfaces */
+  --secondary:         oklch(0.225 0.012 270);
+  --secondary-foreground: oklch(0.900 0.006 270);
+  --muted:             oklch(0.218 0.012 270);
+  --muted-foreground:  oklch(0.655 0.010 270);
+  --accent:            oklch(0.235 0.012 270);
+  --accent-foreground: oklch(0.965 0.005 270);
+
+  /* Semantic */
+  --destructive:       oklch(0.685 0.195 22);
+
+  /* Structure — visible but not harsh */
+  --border:            oklch(1 0 0 / 14%);
+  --input:             oklch(1 0 0 / 11%);
+  --ring:              oklch(0.635 0.220 270);
+
+  /* Sidebar: one clear step deeper than canvas */
+  --sidebar:                    oklch(0.100 0.010 270);
+  --sidebar-foreground:         oklch(0.960 0.005 270);
+  --sidebar-primary:            oklch(0.635 0.220 270);
+  --sidebar-primary-foreground: oklch(0.10 0.005 270);
+  --sidebar-accent:             oklch(0.235 0.012 270);
+  --sidebar-accent-foreground:  oklch(0.965 0.005 270);
+  --sidebar-border:             oklch(1 0 0 / 12%);
+  --sidebar-ring:               oklch(0.635 0.220 270);
+
+  /* Charts */
+  --chart-1: oklch(0.625 0.220 270);
+  --chart-2: oklch(0.680 0.175 250);
+  --chart-3: oklch(0.560 0.190 290);
+  --chart-4: oklch(0.730 0.140 230);
+  --chart-5: oklch(0.500 0.205 285);
+
+  /* Status semantic */
+  --status-success:     oklch(0.660 0.145 145);
+  --status-success-bg:  oklch(0.660 0.145 145 / 0.12);
+  --status-warning:     oklch(0.740 0.148 68);
+  --status-warning-bg:  oklch(0.740 0.148 68 / 0.12);
+  --status-danger:      oklch(0.668 0.185 18);
+  --status-danger-bg:   oklch(0.668 0.185 18 / 0.12);
+  --status-info:        oklch(0.700 0.155 230);
+  --status-info-bg:     oklch(0.700 0.155 230 / 0.12);
+
+  /* Celtic gold accent — luminous in dark */
+  --gold:              oklch(0.82 0.18 75);
+  --gold-bg:           oklch(0.82 0.18 75 / 0.10);
+}
+
+/* ─── Dark mode aurora mesh background ─────────────────────────────────────── */
+/*
+ * Layered radial gradients that create deep indigo-violet aurora depth.
+ * Applied directly to body when .dark is active.
+ * Background color is the same as --background so it always looks right.
+ */
+.dark body {
+  background:
+    radial-gradient(ellipse 80% 50% at 15% 5%,  oklch(0.28 0.12 270 / 0.55) 0%, transparent 58%),
+    radial-gradient(ellipse 55% 40% at 88% 12%, oklch(0.22 0.10 290 / 0.40) 0%, transparent 52%),
+    radial-gradient(ellipse 45% 55% at 50% 95%, oklch(0.18 0.08 262 / 0.30) 0%, transparent 58%),
+    oklch(0.115 0.010 270);
 }
 
 @layer base {
@@ -122,8 +201,470 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "kern" 1, "liga" 1;
   }
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
+  }
+  /* Scrollbar polish */
+  ::-webkit-scrollbar        { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track  { background: transparent; }
+  ::-webkit-scrollbar-thumb  { @apply bg-border rounded-full; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground/40; }
+}
+
+/* ─── Typography scale ────────────────────────────────────────────────────── */
+@layer base {
+  h1 { letter-spacing: -0.030em; font-weight: 700; }
+  h2 { letter-spacing: -0.025em; font-weight: 700; }
+  h3 { letter-spacing: -0.020em; font-weight: 600; }
+  h4 { letter-spacing: -0.015em; font-weight: 600; }
+  /* Tabular numbers everywhere they matter */
+  .tabular { font-variant-numeric: tabular-nums; }
+}
+
+/* ─── Input polish ────────────────────────────────────────────────────────── */
+@layer base {
+  input, textarea, select {
+    color-scheme: light dark;
+  }
+
+  /*
+   * Force date input native UI (calendar icon + picker) to match the app's
+   * theme rather than the OS preference. Without this, color-scheme follows
+   * the OS and the calendar icon can be invisible (dark icon on dark bg).
+   */
+  input[type="date"] {
+    color-scheme: light;
+  }
+  .dark input[type="date"] {
+    color-scheme: dark;
+  }
+
+  /* Spin button: always hidden */
+  input[type="date"]::-webkit-inner-spin-button {
+    display: none;
+  }
+
+  /*
+   * Calendar picker indicator — light mode:
+   * The native icon is dark. opacity 0.4 was nearly invisible on the light gray
+   * input bg. Raised to 0.65 so it's clearly findable; 0.92 on hover/focus.
+   */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.70;
+    cursor: pointer;
+    border-radius: 3px;
+    padding: 2px;
+    transition: opacity 0.15s;
+  }
+  input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+
+  /*
+   * Dark mode: color-scheme: dark already tells the browser to render the
+   * calendar icon in a LIGHT color (white). Applying filter: invert(1) on top
+   * of that would flip the white icon back to black — making it invisible.
+   * So we only set opacity here, no filter.
+   */
+  .dark input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.80;
+  }
+  .dark input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+  }
+}
+
+/* ─── Design utilities ───────────────────────────────────────────────────── */
+@layer components {
+
+  /* Brand gradient — indigo to deep violet */
+  .gradient-brand {
+    background: linear-gradient(135deg, var(--primary) 0%, oklch(0.460 0.235 290) 100%);
+  }
+
+  /* Brand → gold gradient — sidebar header line, accents */
+  .gradient-brand-gold {
+    background: linear-gradient(90deg, var(--primary) 0%, oklch(0.460 0.235 290) 55%, oklch(0.82 0.18 75) 100%);
+  }
+
+  /*
+   * Workspace / project monogram gradients.
+   * Using CSS nesting (&:is(.dark *)) — the correct Tailwind v4 dark pattern
+   * inside @layer components (avoids the broken .dark .class selector form).
+   *
+   *  Light: slightly darker so they pop against the white/near-white card surface
+   *  Dark:  slightly brighter so they read well against the obsidian card surface
+   */
+  .gradient-mono-0 {
+    background: linear-gradient(135deg, oklch(0.545 0.232 270) 0%, oklch(0.435 0.248 294) 100%);
+    &:is(.dark *) {
+      background: linear-gradient(135deg, oklch(0.640 0.222 270) 0%, oklch(0.525 0.236 294) 100%);
+    }
+  }
+  .gradient-mono-1 {
+    background: linear-gradient(135deg, oklch(0.548 0.178 198) 0%, oklch(0.438 0.162 212) 100%);
+    &:is(.dark *) {
+      background: linear-gradient(135deg, oklch(0.638 0.170 198) 0%, oklch(0.525 0.155 212) 100%);
+    }
+  }
+  .gradient-mono-2 {
+    background: linear-gradient(135deg, oklch(0.535 0.212 242) 0%, oklch(0.432 0.225 258) 100%);
+    &:is(.dark *) {
+      background: linear-gradient(135deg, oklch(0.628 0.205 242) 0%, oklch(0.518 0.218 258) 100%);
+    }
+  }
+  .gradient-mono-3 {
+    background: linear-gradient(135deg, oklch(0.525 0.175 302) 0%, oklch(0.425 0.195 316) 100%);
+    &:is(.dark *) {
+      background: linear-gradient(135deg, oklch(0.618 0.168 302) 0%, oklch(0.508 0.185 316) 100%);
+    }
+  }
+  .gradient-mono-4 {
+    background: linear-gradient(135deg, oklch(0.465 0.188 232) 0%, oklch(0.370 0.180 248) 100%);
+    &:is(.dark *) {
+      background: linear-gradient(135deg, oklch(0.558 0.182 232) 0%, oklch(0.455 0.175 248) 100%);
+    }
+  }
+
+  /*
+   * Project color classes:
+   * - strip-*   → background-color (badge avatars, any colored element)
+   * - accent-l-* → border-left-color (4px left border accent on project cards)
+   */
+  .strip-indigo { background-color: #6366f1; }
+  .strip-violet { background-color: #8b5cf6; }
+  .strip-pink   { background-color: #ec4899; }
+  .strip-red    { background-color: #ef4444; }
+  .strip-orange { background-color: #f97316; }
+  .strip-yellow { background-color: #eab308; }
+  .strip-green  { background-color: #22c55e; }
+  .strip-teal   { background-color: #14b8a6; }
+  .strip-blue   { background-color: #3b82f6; }
+  .strip-cyan   { background-color: #06b6d4; }
+
+  /* Left border-color accent — used with border-l-[3px] on project cards */
+  .accent-l-indigo { border-left-color: #6366f1; }
+  .accent-l-violet { border-left-color: #8b5cf6; }
+  .accent-l-pink   { border-left-color: #ec4899; }
+  .accent-l-red    { border-left-color: #ef4444; }
+  .accent-l-orange { border-left-color: #f97316; }
+  .accent-l-yellow { border-left-color: #eab308; }
+  .accent-l-green  { border-left-color: #22c55e; }
+  .accent-l-teal   { border-left-color: #14b8a6; }
+  .accent-l-blue   { border-left-color: #3b82f6; }
+  .accent-l-cyan   { border-left-color: #06b6d4; }
+
+  /* Project color dots (command palette, lists) */
+  .dot-indigo { background-color: #6366f1; }
+  .dot-violet { background-color: #8b5cf6; }
+  .dot-pink   { background-color: #ec4899; }
+  .dot-red    { background-color: #ef4444; }
+  .dot-orange { background-color: #f97316; }
+  .dot-yellow { background-color: #eab308; }
+  .dot-green  { background-color: #22c55e; }
+  .dot-teal   { background-color: #14b8a6; }
+  .dot-blue   { background-color: #3b82f6; }
+  .dot-cyan   { background-color: #06b6d4; }
+
+  /* Dot-grid background pattern (sign-in, empty states) */
+  .bg-dot-grid {
+    background-image: radial-gradient(
+      circle,
+      color-mix(in oklch, var(--primary) 15%, transparent) 1px,
+      transparent 1px
+    );
+    background-size: 28px 28px;
+  }
+
+  /* Status text utilities */
+  .text-status-success { color: var(--status-success); }
+  .text-status-warning { color: var(--status-warning); }
+  .text-status-danger  { color: var(--status-danger); }
+  .text-status-info    { color: var(--status-info); }
+
+  /* Status background utilities */
+  .bg-status-success-bg { background-color: var(--status-success-bg); }
+  .bg-status-warning-bg { background-color: var(--status-warning-bg); }
+  .bg-status-danger-bg  { background-color: var(--status-danger-bg); }
+  .bg-status-info-bg    { background-color: var(--status-info-bg); }
+
+  /* Status border-left utilities */
+  .border-l-status-success { border-left-color: var(--status-success); }
+  .border-l-status-warning { border-left-color: var(--status-warning); }
+  .border-l-status-danger  { border-left-color: var(--status-danger); }
+  .border-l-status-info    { border-left-color: var(--status-info); }
+
+  /* Shadow scale */
+  .shadow-card {
+    box-shadow:
+      0 1px 2px oklch(0 0 0 / 0.04),
+      0 1px 4px oklch(0 0 0 / 0.06);
+  }
+  .shadow-card-hover {
+    box-shadow:
+      0 4px 12px oklch(0 0 0 / 0.08),
+      0 8px 24px oklch(0 0 0 / 0.06);
+  }
+  .shadow-modal {
+    box-shadow:
+      0 24px 60px oklch(0 0 0 / 0.22),
+      0 1px 0 oklch(1 0 0 / 0.06) inset;
+  }
+  .shadow-glow-brand {
+    box-shadow: 0 8px 28px color-mix(in oklch, var(--primary) 35%, transparent);
+  }
+  .shadow-glow-sm {
+    box-shadow: 0 4px 14px color-mix(in oklch, var(--primary) 22%, transparent);
+  }
+
+  /* Velocity ring arc animation */
+  .velocity-ring-arc {
+    animation: arc-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes arc-in {
+    from { opacity: 0; stroke-dashoffset: 1px; }
+    to   { opacity: 1; }
+  }
+
+  /* ── Sidebar: aurora blob drift ───────────────────────────────── */
+  @keyframes sidebar-aurora-1 {
+    0%, 100% { transform: translate(0,    0)    scale(1);    opacity: 1;    }
+    40%       { transform: translate(10px, -14px) scale(1.10); opacity: 0.80; }
+    75%       { transform: translate(-7px,  8px)  scale(0.93); opacity: 1;    }
+  }
+  @keyframes sidebar-aurora-2 {
+    0%, 100% { transform: translate(0,     0)    scale(1);    opacity: 1;    }
+    35%       { transform: translate(-12px, 10px) scale(1.07); opacity: 0.75; }
+    70%       { transform: translate(9px,  -6px)  scale(0.95); opacity: 1;    }
+  }
+  .animate-sidebar-aurora-1 {
+    animation: sidebar-aurora-1 26s ease-in-out infinite;
+  }
+  .animate-sidebar-aurora-2 {
+    animation: sidebar-aurora-2 32s ease-in-out infinite;
+  }
+
+  /* ── Sidebar: brand line shimmer sweep ────────────────────────── */
+  @keyframes shimmer-sweep {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200%  center; }
+  }
+  .gradient-brand-shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--primary)              0%,
+      oklch(0.460 0.235 290)      28%,
+      oklch(0.82 0.18 75)         45%,
+      oklch(0.97 0.06 75)         52%,
+      oklch(0.82 0.18 75)         60%,
+      oklch(0.460 0.235 290)      78%,
+      var(--primary)              100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer-sweep 4s ease-in-out infinite;
+  }
+
+  /* ── Sidebar: active left-bar glow breathe ────────────────────── */
+  @keyframes nav-bar-glow {
+    0%, 100% { opacity: 0.45; filter: blur(4px); }
+    50%       { opacity: 0.90; filter: blur(6px); }
+  }
+  .animate-nav-bar-glow {
+    animation: nav-bar-glow 2.8s ease-in-out infinite;
+  }
+
+  /* ── Sidebar: nav item entrance (slide from left) ─────────────── */
+  @keyframes nav-enter {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0);    }
+  }
+  .animate-nav-enter {
+    animation: nav-enter 0.40s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* ── Sidebar: header fade-down ────────────────────────────────── */
+  @keyframes header-enter {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0);    }
+  }
+  .animate-header-enter {
+    animation: header-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* ── Sidebar: footer slide-up ──────────────────────────────────── */
+  @keyframes footer-enter {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0);   }
+  }
+  .animate-footer-enter {
+    animation: footer-enter 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* ── Page section wrapper ─────────────────────────────────────── */
+  .section-card {
+    @apply rounded-xl border bg-card;
+    box-shadow: 0 1px 2px oklch(0 0 0 / 0.04), 0 1px 4px oklch(0 0 0 / 0.06);
+  }
+  .section-card-header {
+    @apply px-5 py-4 border-b border-border;
+  }
+  .section-card-body {
+    @apply px-5 py-4;
+  }
+
+  /* ── Stats / metric pill ──────────────────────────────────────── */
+  .stat-pill {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium;
+  }
+
+  /* ── Empty state center ───────────────────────────────────────── */
+  .empty-state {
+    @apply flex flex-col items-center justify-center gap-4 py-16 text-center;
+  }
+
+  /* ── Form field ───────────────────────────────────────────────── */
+  .form-field {
+    @apply w-full px-3 py-2.5 border rounded-lg text-sm bg-input transition-colors
+           focus:outline-none focus:ring-2 focus:ring-primary/40 focus:border-primary;
+  }
+
+  /* ── Primary action button (no @apply of custom classes) ─────── */
+  .btn-primary {
+    @apply flex items-center justify-center gap-2 px-4 py-2 text-white
+           rounded-lg text-sm font-semibold hover:opacity-90 active:opacity-80
+           transition-opacity disabled:opacity-50;
+    background: linear-gradient(135deg, var(--primary) 0%, oklch(0.460 0.235 290) 100%);
+    box-shadow: 0 4px 14px color-mix(in oklch, var(--primary) 22%, transparent);
+  }
+
+  /* ── Ghost button ─────────────────────────────────────────────── */
+  .btn-ghost {
+    @apply px-4 py-2 text-sm rounded-lg border border-border hover:bg-accent
+           transition-colors font-medium disabled:opacity-50;
+  }
+
+  /* ── Danger button ────────────────────────────────────────────── */
+  .btn-danger {
+    @apply px-4 py-2 text-sm bg-destructive text-white rounded-lg
+           hover:opacity-90 transition-opacity font-semibold disabled:opacity-50;
+  }
+
+  /* ── Modal header stripe (no @apply of custom classes) ───────── */
+  .modal-stripe {
+    height: 3px;
+    background: linear-gradient(135deg, var(--primary) 0%, oklch(0.460 0.235 290) 100%);
+  }
+
+  /* ── Badge chip ───────────────────────────────────────────────── */
+  .badge-chip {
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-medium;
+  }
+
+  /* ── Celtic gold glows ────────────────────────────────────────── */
+  .shadow-glow-gold {
+    box-shadow: 0 8px 32px oklch(0.82 0.18 75 / 0.32);
+  }
+  .shadow-glow-gold-sm {
+    box-shadow: 0 4px 16px oklch(0.82 0.18 75 / 0.22);
+  }
+
+  /* ── Glassmorphism — dark mode backdrop ───────────────────────── */
+  /*
+   * .glass: standard glass treatment for cards in dark mode.
+   * Light mode: normal card surface. Dark mode: translucent with blur.
+   */
+  .glass {
+    background: var(--card);
+    border: 1px solid var(--border);
+    &:is(.dark *) {
+      background: oklch(0.182 0.012 270 / 0.72);
+      backdrop-filter: blur(12px) saturate(155%);
+      -webkit-backdrop-filter: blur(12px) saturate(155%);
+      border-color: oklch(1 0 0 / 0.11);
+    }
+    &:is(.dark *):hover {
+      border-color: oklch(0.635 0.220 270 / 0.28);
+    }
+  }
+
+  /*
+   * .glass-gold: premium glass with Celtic gold border glow.
+   * Used for sign-in card, key modal surfaces.
+   */
+  .glass-gold {
+    background: var(--card);
+    border: 1px solid var(--border);
+    &:is(.dark *) {
+      background: oklch(0.182 0.012 270 / 0.82);
+      backdrop-filter: blur(20px) saturate(165%);
+      -webkit-backdrop-filter: blur(20px) saturate(165%);
+      border-color: oklch(0.82 0.18 75 / 0.24);
+      box-shadow:
+        0 0 0 1px oklch(0.82 0.18 75 / 0.07) inset,
+        0 32px 72px oklch(0 0 0 / 0.45);
+    }
+  }
+
+  /* ── Gradient text ────────────────────────────────────────────── */
+  .text-gradient-brand {
+    background: linear-gradient(135deg, var(--primary) 0%, oklch(0.460 0.235 290) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /*
+   * .text-gradient-gold: Celtic gold shimmer.
+   * Light mode: rich warm amber. Dark: luminous gold gradient.
+   */
+  .text-gradient-gold {
+    background: linear-gradient(135deg, oklch(0.60 0.15 75) 0%, oklch(0.70 0.13 58) 50%, oklch(0.58 0.14 75) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    &:is(.dark *) {
+      background: linear-gradient(135deg, oklch(0.82 0.18 75) 0%, oklch(0.90 0.13 55) 50%, oklch(0.80 0.17 78) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+  }
+
+  /* ── Card entrance animation ──────────────────────────────────── */
+  .card-enter {
+    animation: card-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .card-enter-1 { animation-delay: 0ms; }
+  .card-enter-2 { animation-delay: 55ms; }
+  .card-enter-3 { animation-delay: 110ms; }
+  .card-enter-4 { animation-delay: 165ms; }
+  .card-enter-5 { animation-delay: 220ms; }
+  .card-enter-6 { animation-delay: 275ms; }
+
+  @keyframes card-in {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Gantt bar entrance ──────────────────────────────────────── */
+  @keyframes bar-slide-in {
+    from { opacity: 0; transform: scaleX(0.55) translateY(4px); }
+    to   { opacity: 1; transform: scaleX(1)    translateY(0); }
+  }
+
+  /* ── Shimmer sweep ───────────────────────────────────────────── */
+  @keyframes shimmer {
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(300%); }
+  }
+  .gantt-shimmer::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+    animation: shimmer 2.4s ease-in-out infinite;
   }
 }

@@ -2,6 +2,7 @@
 
 import { useTransition } from 'react'
 import { useRouter } from 'next/navigation'
+import { Globe } from 'lucide-react'
 import { setLocaleAction } from '@/server/actions/locale.actions'
 
 interface LanguageSwitcherProps {
@@ -12,22 +13,34 @@ export function LanguageSwitcher({ currentLocale }: LanguageSwitcherProps) {
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
-  function toggle() {
-    const next = currentLocale === 'es' ? 'en' : 'es'
+  function setLocale(locale: string) {
+    if (locale === currentLocale) return
     startTransition(async () => {
-      await setLocaleAction(next)
+      await setLocaleAction(locale)
       router.refresh()
     })
   }
 
   return (
-    <button
-      onClick={toggle}
-      disabled={isPending}
-      className="flex items-center gap-1 px-2 py-0.5 text-xs rounded border hover:bg-accent transition-colors disabled:opacity-50 font-mono"
-      title="Switch language"
+    <div
+      className="flex items-center gap-0.5 rounded-md border border-border bg-background/60 p-0.5 disabled:opacity-50"
+      aria-label="Switch language"
     >
-      {currentLocale === 'es' ? '🇪🇸 ES' : '🇺🇸 EN'}
-    </button>
+      <Globe className="w-3 h-3 text-muted-foreground ml-1 shrink-0" />
+      {(['es', 'en'] as const).map((locale) => (
+        <button
+          key={locale}
+          onClick={() => setLocale(locale)}
+          disabled={isPending}
+          className={`px-1.5 py-0.5 text-[10px] font-semibold rounded transition-colors leading-none ${
+            currentLocale === locale
+              ? 'bg-primary text-primary-foreground'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          {locale.toUpperCase()}
+        </button>
+      ))}
+    </div>
   )
 }

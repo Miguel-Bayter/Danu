@@ -1,17 +1,22 @@
 'use server'
 
-import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { WorkspaceRole } from '@prisma/client'
+import { WorkspaceRole, NotificationType } from '@prisma/client'
 import * as workspaceService from '@/server/services/workspace.service'
 import { requireAuth } from '@/server/lib/auth'
+import { notificationRepository } from '@/server/repositories/notification.repository'
+import { workspaceRepository } from '@/server/repositories/workspace.repository'
 
 export async function createWorkspaceAction(formData: FormData) {
   const userId = await requireAuth()
   const name = formData.get('name') as string
   const workspace = await workspaceService.createWorkspace(userId, name)
+
+  // No self-notification: the toast confirms the action to the creator.
+  // Other members don't exist yet at workspace creation time.
+
   revalidatePath('/dashboard')
-  redirect(`/dashboard/${workspace.slug}`)
+  return { slug: workspace.slug }
 }
 
 export async function updateWorkspaceAction(workspaceId: string, formData: FormData) {
@@ -23,9 +28,30 @@ export async function updateWorkspaceAction(workspaceId: string, formData: FormD
 
 export async function deleteWorkspaceAction(workspaceId: string) {
   const userId = await requireAuth()
+
+  // Get all members BEFORE deleting so we can notify them
+  try {
+    const workspace = await workspaceRepository.findById(workspaceId)
+    if (workspace) {
+      const otherMemberIds = workspace.members
+        .map((m) => m.userId)
+        .filter((id) => id !== userId)
+
+      await Promise.all(
+        otherMemberIds.map((memberId) =>
+          notificationRepository.create({
+            userId: memberId,
+            type: NotificationType.WORKSPACE_DELETED,
+            title: 'notification.workspaceDeleted',
+            body: workspace.name,
+          }),
+        ),
+      )
+    }
+  } catch { /* non-critical */ }
+
   await workspaceService.deleteWorkspace(workspaceId, userId)
   revalidatePath('/dashboard')
-  redirect('/dashboard')
 }
 
 export async function removeMemberAction(workspaceId: string, targetUserId: string) {

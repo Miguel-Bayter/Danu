@@ -175,6 +175,21 @@ export const taskRepository = {
     })
   },
 
+  findByWorkspaceTimeline(workspaceId: string) {
+    return prisma.task.findMany({
+      where: {
+        project: { workspaceId },
+        dueDate: { not: null },
+        parentId: null,
+      },
+      include: {
+        assignee: { select: { id: true, name: true, image: true } },
+        project:  { select: { id: true, name: true, color: true } },
+      },
+      orderBy: [{ projectId: 'asc' }, { dueDate: 'asc' }],
+    })
+  },
+
   findOverdueByWorkspace(workspaceId: string) {
     return prisma.task.findMany({
       where: {

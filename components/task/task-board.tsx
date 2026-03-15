@@ -49,6 +49,7 @@ interface TaskBoardProps {
   projectId: string
   workspaceSlug: string
   members: Member[]
+  projectStartDate?: string
 }
 
 // ─── Sortable task card ───────────────────────────────────────────────────────
@@ -131,6 +132,7 @@ function KanbanColumn({
   workspaceSlug,
   members,
   onOpenTask,
+  projectStartDate,
 }: {
   status: TaskStatus
   tasks: Task[]
@@ -138,6 +140,7 @@ function KanbanColumn({
   workspaceSlug: string
   members: Member[]
   onOpenTask: (task: Task) => void
+  projectStartDate?: string
 }) {
   const t = useTranslations('task')
   const { setNodeRef, isOver } = useDroppable({ id: status })
@@ -172,6 +175,7 @@ function KanbanColumn({
         workspaceSlug={workspaceSlug}
         members={members}
         defaultStatus={status}
+        projectStartDate={projectStartDate}
       />
     </div>
   )
@@ -179,7 +183,7 @@ function KanbanColumn({
 
 // ─── Main board ───────────────────────────────────────────────────────────────
 
-export function TaskBoard({ tasks, projectId, workspaceSlug, members }: TaskBoardProps) {
+export function TaskBoard({ tasks, projectId, workspaceSlug, members, projectStartDate }: TaskBoardProps) {
   useRealtimeTasks(projectId)
   const [localTasks, setLocalTasks] = useState<Task[]>(tasks)
   const [selectedTask, setSelectedTask] = useState<Task | null>(null)
@@ -286,6 +290,7 @@ export function TaskBoard({ tasks, projectId, workspaceSlug, members }: TaskBoar
               workspaceSlug={workspaceSlug}
               members={members}
               onOpenTask={handleOpenTask}
+              projectStartDate={projectStartDate}
             />
           ))}
         </div>

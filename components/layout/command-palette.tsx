@@ -4,8 +4,9 @@ import { useState, useEffect, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
 import { Command } from 'cmdk'
 import { useTranslations } from 'next-intl'
-import { Search, LayoutDashboard, FolderOpen } from 'lucide-react'
+import { Search, LayoutDashboard } from 'lucide-react'
 import { getSearchDataAction } from '@/server/actions/search.actions'
+import { COLOR_DOT_CLASS } from '@/lib/constants'
 
 type SearchData = {
   workspaces: { id: string; name: string; slug: string }[]
@@ -126,8 +127,7 @@ export function CommandPalette() {
                         className="flex items-center gap-2.5 px-2 py-2 rounded-md cursor-pointer text-sm data-[selected=true]:bg-accent aria-selected:bg-accent"
                       >
                         <span
-                          className="w-2.5 h-2.5 rounded-full shrink-0"
-                          style={{ backgroundColor: p.color }}
+                          className={`w-2.5 h-2.5 rounded-full shrink-0 ${COLOR_DOT_CLASS[p.color] ?? 'dot-indigo'}`}
                         />
                         <span className="flex-1 truncate">{p.name}</span>
                         <span className="text-xs text-muted-foreground shrink-0">

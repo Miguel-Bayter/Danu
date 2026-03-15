@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" role="img" aria-label="Danu">
+  <defs>
+    <!--
+      Danu — Celtic Triskelion (La Tène triple spiral)
+      ─────────────────────────────────────────────────
+      The triskelion is the most ancient Celtic symbol, appearing at Newgrange
+      (3200 BC), the Book of Kells, and throughout La Tène art. Three spiral arms
+      radiate from a central hub — representing Danu's three domains:
+      rivers (motion), wisdom (depth), guidance (direction).
+
+      Each arm: starts at center, sweeps outward in a counterclockwise spiral,
+      rounds at the tip, and returns via a lower arc — creating a solid
+      comma/teardrop form. Three 120°-rotated copies form the triskelion.
+    -->
+    <linearGradient id="danu-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"   stop-color="#6366f1"/>
+      <stop offset="100%" stop-color="#3730a3"/>
+    </linearGradient>
+    <!-- Upper-left glow -->
+    <radialGradient id="danu-glow" cx="38%" cy="28%" r="56%">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="48" height="48" rx="12" fill="url(#danu-bg)"/>
+  <rect width="48" height="48" rx="12" fill="url(#danu-glow)"/>
+
+  <!-- Subtle outer guide ring (Celtic circle motif) -->
+  <circle cx="24" cy="24" r="15.5"
+          fill="none" stroke="white" stroke-width="0.4" stroke-opacity="0.20"/>
+
+  <!--
+    Three La Tène spiral arms — each arm:
+      · starts at center (24,24)
+      · outer edge: bezier to tip ≈ (8.5,20), about 15.7px from center
+      · lower edge: sweeps counterclockwise around the tip, returns to (19,30.5)
+      · taper: closes back to center
+  -->
+  <g fill="white" fill-opacity="0.97">
+    <path d="M 24 24
+             C 20.5 19, 10 13, 8.5 20
+             C 7 27, 12 32.5, 19 30.5
+             C 21.5 29.5, 23 27, 24 24 Z"/>
+    <path d="M 24 24
+             C 20.5 19, 10 13, 8.5 20
+             C 7 27, 12 32.5, 19 30.5
+             C 21.5 29.5, 23 27, 24 24 Z"
+          transform="rotate(120 24 24)"/>
+    <path d="M 24 24
+             C 20.5 19, 10 13, 8.5 20
+             C 7 27, 12 32.5, 19 30.5
+             C 21.5 29.5, 23 27, 24 24 Z"
+          transform="rotate(240 24 24)"/>
+  </g>
+
+  <!-- Center hub — anchors the three spiral arms -->
+  <circle cx="24" cy="24" r="2.8" fill="white"/>
+</svg>
