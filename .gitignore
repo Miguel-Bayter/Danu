@@ -34,6 +34,7 @@ next-env.d.ts
 # Variables de entorno (contienen IPs, URLs, passwords, tokens)
 .env
 .env*
+!.env.example
 .env.local
 .env.development.local
 .env.test.local
@@ -114,7 +115,8 @@ docker-compose.local.yml
 .claude
 
 # ─── Docs internas del proyecto ──────────────────────────────
-Docs
+Docs/
+docs/
 
 # ─── IDEs ────────────────────────────────────────────────────
 .vscode/
