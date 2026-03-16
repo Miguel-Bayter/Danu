@@ -7,6 +7,7 @@
 
 import React from 'react'
 import { render, screen, fireEvent } from '@testing-library/react'
+import { ProjectStatus } from '@prisma/client'
 import { ProjectCard } from '@/components/project/project-card'
 
 /* ─── Mocks ─────────────────────────────────────────────────────── */
@@ -49,7 +50,7 @@ function makeProject(overrides = {}) {
     id: 'proj-1',
     name: 'Alpha Project',
     description: 'A test project description',
-    status: 'ACTIVE',
+    status: ProjectStatus.ACTIVE,
     color: '#6366f1',
     startDate: null,
     endDate: null,

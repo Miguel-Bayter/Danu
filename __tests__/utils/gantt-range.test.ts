@@ -7,6 +7,8 @@
  * All functions are replicated inline (they live inside the component file).
  */
 
+export {}
+
 /* ─── Type stubs ─────────────────────────────────────────────────── */
 
 interface GanttProject {

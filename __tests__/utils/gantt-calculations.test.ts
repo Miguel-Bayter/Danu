@@ -3,6 +3,8 @@
  * pure functions so they can be tested without rendering.
  */
 
+export {}
+
 function toPct(date: Date, rangeStart: Date, totalMs: number): number {
   return ((date.getTime() - rangeStart.getTime()) / totalMs) * 100
 }
