@@ -19,7 +19,7 @@
 
 - [Why Danu?](#why-danu)
 - [Features](#features)
-- [Screenshots](#screenshots)
+- [Demo Walkthrough](#demo-walkthrough)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
 - [Local Setup](#local-setup)
@@ -62,18 +62,39 @@ Built as a full-stack portfolio project demonstrating React 19, Next.js 16 App R
 
 ---
 
-## Screenshots
+## Demo Walkthrough
 
-> **[👉 See it live — no account required](https://danu-eight.vercel.app/sign-in)**
-> Click "Probar demo sin cuenta" to get a fully loaded workspace in seconds.
+> **[👉 Try it live — no account required](https://danu-eight.vercel.app/sign-in)**
+> Click "Probar demo sin cuenta" to get a fully loaded workspace in under 3 seconds.
 
-| Kanban Board | Gantt Timeline |
-|---|---|
-| *Drag & drop tasks across 4 columns with real-time sync* | *CSS Grid Gantt with preset windows and tooltips* |
+Once inside, here's what to explore:
 
-| Health Score Dashboard | Command Palette |
-|---|---|
-| *Workspace metrics + team health algorithm* | *Cmd+K global search across workspaces* |
+**1. Kanban board**
+Open any project → drag a task card between columns (TODO → IN_PROGRESS → DONE).
+Each move persists instantly. Open two browser tabs to see real-time sync via Supabase WebSockets.
+
+**2. Task detail**
+Click any card → a sheet slides in with full fields: priority, assignee, due date, subtasks, and comments.
+
+**3. Timeline / Gantt**
+Go to the Timeline tab → switch between 1M / 3M / 6M / All presets.
+Hover any bar to see project dates and progress. Scroll horizontally on mobile.
+
+**4. Health Score**
+Back on the workspace dashboard → the ring gauge shows the team health algorithm in action:
+`score = completionRate − overduePenalty`. Overdue tasks drag it down in real time.
+
+**5. Command Palette**
+Press `Cmd+K` (or `Ctrl+K`) from anywhere → search across all workspaces and projects by name.
+
+**6. PDF Report**
+Click "Export weekly report" → choose a period → downloads a PDF with metrics, health score, and task lists.
+
+**7. Notifications**
+The bell icon in the sidebar shows real-time alerts (task assigned, overdue, deadline approaching).
+
+**8. Dark mode**
+Toggle the theme button in the sidebar header — full dark/light/system support throughout.
 
 ---
 
