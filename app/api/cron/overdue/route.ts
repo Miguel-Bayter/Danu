@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { taskRepository } from '@/server/repositories/task.repository'
 import { notificationRepository } from '@/server/repositories/notification.repository'
 import { NotificationType } from '@prisma/client'
+import { prisma } from '@/lib/prisma'
 
 export const dynamic = 'force-dynamic'
 export const runtime = 'nodejs'
@@ -31,5 +32,14 @@ export async function GET(req: NextRequest) {
     processed++
   }
 
-  return NextResponse.json({ processed, total: tasks.length })
+  // Cleanup orphaned demo users (tab closed without logout) older than 2h
+  const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000)
+  const { count: demosDeleted } = await prisma.user.deleteMany({
+    where: {
+      email: { startsWith: 'demo-', endsWith: '@danu.app' },
+      createdAt: { lt: twoHoursAgo },
+    },
+  })
+
+  return NextResponse.json({ processed, total: tasks.length, demosDeleted })
 }
