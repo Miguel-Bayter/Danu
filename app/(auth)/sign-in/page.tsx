@@ -6,6 +6,11 @@ import { ThemeToggle } from '@/components/layout/theme-toggle'
 export default async function SignInPage() {
   const t = await getTranslations('auth.signIn')
 
+  async function signInDemo() {
+    'use server'
+    await signIn('credentials', { type: 'demo', redirectTo: '/dashboard' })
+  }
+
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden bg-background">
 
@@ -76,6 +81,29 @@ export default async function SignInPage() {
                 {t('githubButton')}
               </button>
             </form>
+
+            {/* Demo button */}
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <div className="h-px flex-1 bg-border/40" />
+                <span className="text-[10px] text-muted-foreground/40 uppercase tracking-widest">o</span>
+                <div className="h-px flex-1 bg-border/40" />
+              </div>
+              <form action={signInDemo}>
+                <button
+                  type="submit"
+                  className="w-full flex items-center justify-center gap-2
+                             border border-border/60 hover:border-primary/40
+                             text-muted-foreground hover:text-foreground
+                             rounded-xl px-4 py-2.5 text-sm font-medium
+                             hover:bg-primary/[0.04]
+                             transition-all duration-150"
+                >
+                  <span className="text-base leading-none">👀</span>
+                  Probar demo sin cuenta
+                </button>
+              </form>
+            </div>
 
             {/* Footer */}
             <p className="text-center text-[10.5px] text-muted-foreground/35 tracking-[0.12em] uppercase">
