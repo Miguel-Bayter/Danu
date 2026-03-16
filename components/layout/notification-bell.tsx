@@ -63,7 +63,7 @@ export function NotificationBell({ userId }: { userId: string }) {
     })
   }
 
-  useEffect(() => { load() }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { load() }, []) // eslint-disable-line react-hooks/exhaustive-deps, react-hooks/set-state-in-effect
 
   useRealtimeNotifications(userId, load)
 
@@ -103,7 +103,7 @@ export function NotificationBell({ userId }: { userId: string }) {
       window.removeEventListener('scroll', onScroll, true)
       window.removeEventListener('resize', onScroll)
     }
-  }, [open]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [open])
 
   const unread = notifications.filter((n) => !n.read).length
 

@@ -286,7 +286,7 @@ function buildPDF(doc: any, workspaceName: string, data: any, labels: PdfLabels,
     doc.setTextColor(0, 0, 0)
     y += 7
   } else {
-    data.completedThisWeek.slice(0, 15).forEach((task: any) => {
+    data.completedThisWeek.slice(0, 15).forEach((task: { title: string; completedAt?: string | null; project: { name: string } }) => {
       if (y > 255) return
       const date = task.completedAt
         ? new Date(task.completedAt).toLocaleDateString(locale)
@@ -315,7 +315,7 @@ function buildPDF(doc: any, workspaceName: string, data: any, labels: PdfLabels,
     doc.text(labels.noOverdue, 15, y)
     doc.setTextColor(0, 0, 0)
   } else {
-    data.overdue.slice(0, 12).forEach((task: any) => {
+    data.overdue.slice(0, 12).forEach((task: { title: string; dueDate?: string | null; project: { name: string } }) => {
       if (y > 270) return
       const due = task.dueDate
         ? `${labels.dueLabel} ${new Date(task.dueDate).toLocaleDateString(locale)}`

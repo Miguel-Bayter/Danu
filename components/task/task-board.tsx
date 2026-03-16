@@ -194,6 +194,7 @@ export function TaskBoard({ tasks, projectId, workspaceSlug, members, projectSta
   // Guard: don't sync while a drag is in progress to avoid visual flicker
   useEffect(() => {
     if (!draggedTask) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLocalTasks(tasks)
     }
   }, [tasks, draggedTask])

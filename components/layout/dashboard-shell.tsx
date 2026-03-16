@@ -14,6 +14,7 @@ export function DashboardShell({ sidebar, children }: DashboardShellProps) {
   const pathname = usePathname()
 
   // Auto-close mobile drawer when navigating to a new route
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { setMobileOpen(false) }, [pathname])
 
   return (

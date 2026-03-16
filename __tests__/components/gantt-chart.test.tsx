@@ -11,7 +11,7 @@ vi.mock('next-intl', () => ({
 }))
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, className }: any) =>
+  default: ({ children, href, className }: { children: React.ReactNode; href: string; className?: string }) =>
     React.createElement('a', { href, className }, children),
 }))
 

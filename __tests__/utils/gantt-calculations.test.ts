@@ -22,8 +22,6 @@ function getBarBounds(
   return { left: `${left}%`, width: `${width}%` }
 }
 
-const YEAR_MS = 365 * 24 * 60 * 60 * 1000
-
 describe('toPct', () => {
   const rangeStart = new Date('2025-01-01')
   const rangeEnd = new Date('2026-01-01')
@@ -40,7 +38,7 @@ describe('toPct', () => {
 
 describe('getBarBounds', () => {
   it('returns null when startDate or endDate is null', () => {
-    const noop = (_d: Date) => 0
+    const noop = (_: Date) => 0
     expect(getBarBounds(null, null, noop)).toBeNull()
     expect(getBarBounds('2025-01-01', null, noop)).toBeNull()
     expect(getBarBounds(null, '2025-12-31', noop)).toBeNull()

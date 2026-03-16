@@ -21,14 +21,14 @@ vi.mock('next-intl', () => ({
 }))
 
 vi.mock('next/link', () => ({
-  default: ({ children, href, className, onClick }: any) =>
+  default: ({ children, href, className, onClick }: { children: React.ReactNode; href: string; className?: string; onClick?: () => void }) =>
     React.createElement('a', { href, className, onClick }, children),
 }))
 
 vi.mock('motion/react', () => ({
   motion: {
-    div: ({ children, className, ...rest }: any) =>
-      React.createElement('div', { className, ...rest }, children),
+    div: ({ children, className }: { children: React.ReactNode; className?: string }) =>
+      React.createElement('div', { className }, children),
   },
 }))
 

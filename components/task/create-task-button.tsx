@@ -139,7 +139,7 @@ function AssigneeSelect({
           {/* Accent stripe */}
           <div className="h-[2px] -mt-1 mb-1 mx-0 rounded-t-xl bg-gradient-to-r from-primary/60 via-violet-500/60 to-transparent" />
 
-          {members.map((m, i) => {
+          {members.map((m) => {
             const isSelected = selected?.userId === m.userId
             return (
               <button

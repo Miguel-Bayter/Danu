@@ -28,6 +28,7 @@ export function CommandPalette() {
   const [isMac, setIsMac] = useState(false)
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMac(navigator.platform.toUpperCase().includes('MAC') ||
              navigator.userAgent.toUpperCase().includes('MAC'))
   }, [])
