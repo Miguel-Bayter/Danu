@@ -83,18 +83,19 @@ export function CommandPalette() {
                         border border-border dark:border-sidebar-border
                         text-muted-foreground dark:text-sidebar-foreground/60
                         font-mono shrink-0 whitespace-nowrap">
-          {isMac ? '⌘K' : 'Ctrl K'}
+          <span className="hidden sm:inline">{isMac ? '⌘K' : 'Ctrl K'}</span>
         </kbd>
       </button>
 
       {/* Modal overlay */}
       {open && (
         <div
-          className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-[18vh]"
+          className="fixed inset-0 bg-black/50 z-50 flex items-start justify-center pt-[8vh] sm:pt-[18vh] px-4 sm:px-0"
           onClick={() => setOpen(false)}
         >
           <div
             className="bg-card border rounded-xl shadow-2xl w-full max-w-lg overflow-hidden"
+            style={{ maxWidth: 'min(512px, calc(100vw - 2rem))' }}
             onClick={(e) => e.stopPropagation()}
           >
             <Command

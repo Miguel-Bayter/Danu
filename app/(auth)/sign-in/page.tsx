@@ -39,13 +39,13 @@ export default async function SignInPage() {
       </div>
 
       {/* ── Sign-in card ── */}
-      <div className="relative w-full max-w-[380px] mx-4 z-10 card-enter">
+      <div className="relative w-full max-w-[380px] mx-4 sm:mx-auto z-10 card-enter">
         <div className="glass-gold rounded-2xl overflow-hidden">
 
           {/* Gold-tipped accent stripe */}
           <div className="h-[3px] bg-gradient-to-r from-primary via-violet-500 to-amber-400" />
 
-          <div className="px-8 pt-10 pb-8 space-y-8">
+          <div className="px-5 sm:px-8 pt-8 sm:pt-10 pb-7 sm:pb-8 space-y-7 sm:space-y-8">
 
             {/* Logo + branding */}
             <div className="flex flex-col items-center gap-5">

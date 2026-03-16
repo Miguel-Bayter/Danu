@@ -106,9 +106,9 @@ export function ProjectCard({ project, workspaceSlug }: ProjectCardProps) {
       <div className="absolute top-3.5 right-3">
         <button
           onClick={(e) => { e.preventDefault(); setShowMenu(!showMenu) }}
-          className="w-7 h-7 flex items-center justify-center rounded-md text-muted-foreground
+          className="w-9 h-9 flex items-center justify-center rounded-md text-muted-foreground
                      hover:text-foreground hover:bg-accent transition-colors
-                     opacity-0 group-hover:opacity-100"
+                     opacity-100 sm:opacity-0 sm:group-hover:opacity-100"
         >
           <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 fill-current">
             <circle cx="8" cy="3" r="1.2" /><circle cx="8" cy="8" r="1.2" /><circle cx="8" cy="13" r="1.2" />

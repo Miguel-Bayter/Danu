@@ -40,12 +40,13 @@ export function DashboardShell({ sidebar, children }: DashboardShellProps) {
         <div className="flex items-center gap-3 h-14 px-4 border-b bg-card md:hidden shrink-0">
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="p-1.5 rounded-md hover:bg-accent transition-colors"
+            className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl
+                       hover:bg-accent active:bg-accent/80 transition-colors -ml-2"
             aria-label="Toggle navigation"
           >
             {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
-          <span className="font-bold text-lg tracking-tight">Danu</span>
+          <span className="font-bold text-base tracking-tight">Danu</span>
         </div>
 
         <main className="flex-1 overflow-auto">{children}</main>

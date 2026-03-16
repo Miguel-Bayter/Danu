@@ -70,10 +70,13 @@ export function NotificationBell({ userId }: { userId: string }) {
   function updatePosition() {
     if (!triggerRef.current) return
     const r = triggerRef.current.getBoundingClientRect()
+    const panelW = Math.min(320, window.innerWidth - 16)
+    const left = Math.min(r.left, window.innerWidth - panelW - 8)
     setPanelStyle({
       position: 'fixed',
       bottom: window.innerHeight - r.top + 8,
-      left: r.left,
+      left: Math.max(8, left),
+      width: panelW,
       zIndex: 9999,
     })
   }
@@ -124,7 +127,7 @@ export function NotificationBell({ userId }: { userId: string }) {
     <div
       ref={panelRef}
       style={panelStyle}
-      className="w-80 border border-border/70 rounded-2xl bg-card shadow-2xl overflow-hidden"
+      className="border border-border/70 rounded-2xl bg-card shadow-2xl overflow-hidden"
     >
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-border/50 bg-muted/20">
@@ -225,7 +228,8 @@ export function NotificationBell({ userId }: { userId: string }) {
       <button
         ref={triggerRef}
         onClick={handleOpen}
-        className="relative p-1.5 rounded-md hover:bg-accent transition-colors text-muted-foreground"
+        className="relative min-w-[40px] min-h-[40px] flex items-center justify-center
+                   rounded-xl hover:bg-accent active:bg-accent/80 transition-colors text-muted-foreground"
         aria-label={t('title')}
       >
         <Bell className="w-4 h-4" />

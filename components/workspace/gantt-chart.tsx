@@ -390,7 +390,7 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
       <div className="px-4 md:px-6 pt-4 pb-3 shrink-0">
         <div className="glass rounded-2xl overflow-hidden shadow-card">
           <div className="gradient-brand-gold h-[3px]" />
-          <div className="px-5 py-3.5 flex items-center gap-3 flex-wrap">
+          <div className="px-4 sm:px-5 py-3 sm:py-3.5 flex items-center gap-2 sm:gap-3 flex-wrap">
 
             <Link
               href={`/dashboard/${slug}`}
@@ -420,7 +420,7 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                 <button
                   key={preset}
                   onClick={() => setRangePreset(preset)}
-                  className={`px-2.5 py-1.5 text-[11px] font-semibold transition-colors
+                  className={`px-2.5 py-2 text-[11px] font-semibold transition-colors
                               ${i > 0 ? 'border-l border-border' : ''}
                               ${rangePreset === preset
                                 ? 'bg-primary/[0.08] text-primary'
@@ -437,7 +437,7 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
             <div className="flex items-center rounded-lg border border-border overflow-hidden shrink-0">
               <button
                 onClick={() => setViewMode('projects')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-[11.5px] font-semibold
+                className={`flex items-center gap-1.5 px-3 py-2 text-[11.5px] font-semibold
                             transition-colors border-r border-border
                             ${viewMode === 'projects'
                               ? 'bg-primary text-white'
@@ -448,7 +448,7 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
               </button>
               <button
                 onClick={() => setViewMode('tasks')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-[11.5px] font-semibold
+                className={`flex items-center gap-1.5 px-3 py-2 text-[11.5px] font-semibold
                             transition-colors
                             ${viewMode === 'tasks'
                               ? 'bg-primary text-white'

@@ -48,8 +48,8 @@ export function Sidebar({ workspaces, user, locale }: SidebarProps) {
       <button
         onClick={() => setCollapsed((v) => !v)}
         title={collapsed ? 'Expandir sidebar' : 'Colapsar sidebar'}
-        className="absolute right-0 top-3.5 translate-x-full z-50
-                   w-7 h-7 flex items-center justify-center rounded-r-lg
+        className="absolute right-0 top-2.5 translate-x-full z-50
+                   w-8 h-9 flex items-center justify-center rounded-r-lg
                    bg-sidebar border border-l-0 border-sidebar-border
                    text-muted-foreground hover:text-foreground
                    dark:text-sidebar-foreground/60 dark:hover:text-sidebar-foreground
