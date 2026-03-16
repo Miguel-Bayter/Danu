@@ -128,6 +128,7 @@ model Task {
   assigneeId  String?
   creatorId   String
   position    Int        @default(0)
+  startDate   DateTime?
   dueDate     DateTime?
   completedAt DateTime?
   createdAt   DateTime   @default(now())

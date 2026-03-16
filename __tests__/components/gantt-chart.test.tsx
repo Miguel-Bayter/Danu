@@ -31,6 +31,7 @@ const undatedProjects = [
     id: '1',
     name: 'No Date Project',
     color: '#6366f1',
+    status: 'ACTIVE',
     startDate: null,
     endDate: null,
   },
@@ -41,6 +42,7 @@ const datedProjects = [
     id: '2',
     name: 'Has Dates Project',
     color: '#22c55e',
+    status: 'ACTIVE',
     startDate: '2020-01-01',
     endDate: '2030-12-31',
   },
@@ -51,6 +53,7 @@ describe('GanttChart', () => {
     render(
       <GanttChart
         projects={undatedProjects}
+        tasks={[]}
         slug={slug}
         workspaceName={workspaceName}
       />
@@ -62,6 +65,7 @@ describe('GanttChart', () => {
     render(
       <GanttChart
         projects={undatedProjects}
+        tasks={[]}
         slug={slug}
         workspaceName={workspaceName}
       />
@@ -74,6 +78,7 @@ describe('GanttChart', () => {
     render(
       <GanttChart
         projects={undatedProjects}
+        tasks={[]}
         slug={slug}
         workspaceName={workspaceName}
       />
@@ -85,6 +90,7 @@ describe('GanttChart', () => {
     render(
       <GanttChart
         projects={datedProjects}
+        tasks={[]}
         slug={slug}
         workspaceName={workspaceName}
       />

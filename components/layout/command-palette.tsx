@@ -25,6 +25,12 @@ export function CommandPalette() {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState<SearchData | null>(null)
   const [, startTransition] = useTransition()
+  const [isMac, setIsMac] = useState(false)
+
+  useEffect(() => {
+    setIsMac(navigator.platform.toUpperCase().includes('MAC') ||
+             navigator.userAgent.toUpperCase().includes('MAC'))
+  }, [])
 
   // Global Cmd+K / Ctrl+K
   useEffect(() => {
@@ -55,15 +61,29 @@ export function CommandPalette() {
 
   return (
     <>
-      {/* Trigger button rendered inline in the sidebar */}
+      {/* Trigger button — matches NavItem visual language */}
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-2 w-full px-2 py-1.5 text-xs text-muted-foreground rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+        className="group flex items-center gap-2.5 w-full px-2.5 py-[7px] rounded-lg
+                   text-[12.5px] font-medium text-muted-foreground dark:text-muted-foreground/80
+                   hover:bg-accent/50 dark:hover:bg-white/[0.07]
+                   hover:text-foreground transition-all duration-150"
       >
-        <Search className="w-3.5 h-3.5 shrink-0" />
+        <span className="w-[26px] h-[26px] rounded-lg flex items-center justify-center shrink-0
+                         bg-muted/50 dark:bg-white/[0.09] text-muted-foreground
+                         dark:text-muted-foreground/80
+                         group-hover:bg-muted/80 dark:group-hover:bg-white/[0.13]
+                         group-hover:text-foreground transition-all duration-150">
+          <Search className="w-[14px] h-[14px]" />
+        </span>
         <span className="flex-1 text-left">{t('openPalette')}</span>
-        <kbd className="text-[10px] bg-muted px-1.5 py-0.5 rounded border font-mono leading-none">
-          ⌘K
+        <kbd className="text-[9px] font-semibold leading-none
+                        px-1.5 py-[3px] rounded-[5px]
+                        bg-muted dark:bg-muted
+                        border border-border dark:border-sidebar-border
+                        text-muted-foreground dark:text-sidebar-foreground/60
+                        font-mono shrink-0 whitespace-nowrap">
+          {isMac ? '⌘K' : 'Ctrl K'}
         </kbd>
       </button>
 

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 
 interface DashboardShellProps {
@@ -10,6 +11,10 @@ interface DashboardShellProps {
 
 export function DashboardShell({ sidebar, children }: DashboardShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const pathname = usePathname()
+
+  // Auto-close mobile drawer when navigating to a new route
+  useEffect(() => { setMobileOpen(false) }, [pathname])
 
   return (
     <div className="flex h-screen bg-background overflow-hidden">

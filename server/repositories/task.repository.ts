@@ -184,7 +184,8 @@ export const taskRepository = {
       },
       include: {
         assignee: { select: { id: true, name: true, image: true } },
-        project:  { select: { id: true, name: true, color: true } },
+        project:  { select: { id: true, name: true, color: true, status: true } },
+        _count:   { select: { subtasks: true } },
       },
       orderBy: [{ projectId: 'asc' }, { dueDate: 'asc' }],
     })

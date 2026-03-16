@@ -1,10 +1,12 @@
 import { getUserWorkspacesAction } from '@/server/actions/workspace.actions'
+import { maybeSeeDemoAction } from '@/server/actions/demo-seed.actions'
 import { CreateWorkspaceButton } from '@/components/workspace/create-workspace-button'
 import { WorkspaceCard } from '@/components/workspace/workspace-card'
 import { getTranslations } from 'next-intl/server'
 import { LogoMark } from '@/components/ui/logo-mark'
 
 export default async function DashboardPage() {
+  await maybeSeeDemoAction()
   const workspaces = await getUserWorkspacesAction()
   const t = await getTranslations('dashboard')
 

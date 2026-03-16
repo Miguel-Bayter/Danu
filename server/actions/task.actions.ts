@@ -28,7 +28,7 @@ export async function createTaskAction(
     status,
     assigneeId,
     parentId,
-    dueDate: dueDateRaw ? new Date(dueDateRaw) : undefined,
+    dueDate: dueDateRaw ? new Date(dueDateRaw + 'T12:00:00.000Z') : undefined,
   })
 
   // Notify assignee if different from creator
@@ -72,7 +72,7 @@ export async function updateTaskAction(
     priority,
     status,
     assigneeId,
-    dueDate: dueDateRaw ? new Date(dueDateRaw) : dueDateRaw === '' ? null : undefined,
+    dueDate: dueDateRaw ? new Date(dueDateRaw + 'T12:00:00.000Z') : dueDateRaw === '' ? null : undefined,
   })
 
   // Notify new assignee if changed and different from current user
