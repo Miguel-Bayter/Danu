@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useTransition } from 'react'
+import { useState, useEffect, useMemo, useTransition } from 'react'
 import { useTranslations } from 'next-intl'
 import {
   DndContext,
@@ -204,12 +204,15 @@ export function TaskBoard({ tasks, projectId, workspaceSlug, members, projectSta
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
   )
 
-  const grouped = STATUS_ORDER.reduce<Record<TaskStatus, Task[]>>(
-    (acc, status) => {
-      acc[status] = localTasks.filter((t) => t.status === status)
-      return acc
-    },
-    { TODO: [], IN_PROGRESS: [], IN_REVIEW: [], DONE: [] },
+  const grouped = useMemo(
+    () => STATUS_ORDER.reduce<Record<TaskStatus, Task[]>>(
+      (acc, status) => {
+        acc[status] = localTasks.filter((t) => t.status === status)
+        return acc
+      },
+      { TODO: [], IN_PROGRESS: [], IN_REVIEW: [], DONE: [] },
+    ),
+    [localTasks],
   )
 
   function onDragStart(event: DragStartEvent) {

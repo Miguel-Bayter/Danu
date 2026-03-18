@@ -305,6 +305,8 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
 
   /* ── Date header ── */
   function DateHeader() {
+    const nowMonth = today.getMonth()
+    const nowYear  = today.getFullYear()
     return (
       <div className="flex border-b border-border/70 shrink-0 bg-muted/[0.04] shadow-[0_1px_0_0_hsl(var(--border)/0.6)]">
         {/* Column label cell */}
@@ -323,9 +325,8 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
         <div className="flex-1 relative overflow-hidden h-[68px]">
           {/* Month name row */}
           {months.map((m, i) => {
-            const isCurrentMonth =
-              new Date().getMonth() === new Date(rangeStart.getFullYear(), rangeStart.getMonth() + i, 1).getMonth() &&
-              new Date().getFullYear() === new Date(rangeStart.getFullYear(), rangeStart.getMonth() + i, 1).getFullYear()
+            const d = new Date(rangeStart.getFullYear(), rangeStart.getMonth() + i, 1)
+            const isCurrentMonth = d.getMonth() === nowMonth && d.getFullYear() === nowYear
             return (
               <div
                 key={i}

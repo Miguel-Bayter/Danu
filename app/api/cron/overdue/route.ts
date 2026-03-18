@@ -18,19 +18,21 @@ export async function GET(req: NextRequest) {
   }
 
   const tasks = await taskRepository.findOverdue()
-  let processed = 0
+  const assignedTasks = tasks.filter((t) => t.assigneeId)
 
-  for (const task of tasks) {
-    if (!task.assigneeId) continue
-    await notificationRepository.create({
-      userId: task.assigneeId,
-      type: NotificationType.TASK_OVERDUE,
-      title: 'notification.taskOverdue',
-      body: task.title,
-      linkUrl: `/dashboard/${task.project.workspace.slug}/${task.projectId}`,
-    })
-    processed++
-  }
+  await Promise.all(
+    assignedTasks.map((task) =>
+      notificationRepository.create({
+        userId: task.assigneeId!,
+        type: NotificationType.TASK_OVERDUE,
+        title: 'notification.taskOverdue',
+        body: task.title,
+        linkUrl: `/dashboard/${task.project.workspace.slug}/${task.projectId}`,
+      }),
+    ),
+  )
+
+  const processed = assignedTasks.length
 
   // Cleanup orphaned demo users (tab closed without logout) older than 2h
   const twoHoursAgo = new Date(Date.now() - 2 * 60 * 60 * 1000)

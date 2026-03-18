@@ -85,10 +85,6 @@ export function Sidebar({ workspaces, user, locale }: SidebarProps) {
                             transition-colors duration-150 group-hover:text-primary">
                 Danu
               </p>
-              <p className="text-[9px] text-muted-foreground/40 leading-none truncate
-                            tracking-[0.08em] uppercase font-semibold mt-[3px]">
-                Project Management
-              </p>
             </div>
           </Link>
           <LanguageSwitcher currentLocale={locale} />

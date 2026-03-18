@@ -35,15 +35,16 @@ const TYPE_META: Partial<Record<NotificationType, NotifMeta>> = {
 }
 
 function relativeTime(date: Date, locale: string): string {
-  const diff = Date.now() - date.getTime()
+  const diff  = Date.now() - date.getTime()
   const mins  = Math.floor(diff / 60000)
   const hours = Math.floor(diff / 3600000)
   const days  = Math.floor(diff / 86400000)
+  const es    = locale.startsWith('es')
 
-  if (mins < 1)   return locale.startsWith('es') ? 'ahora'         : 'just now'
-  if (mins < 60)  return locale.startsWith('es') ? `hace ${mins}m` : `${mins}m ago`
-  if (hours < 24) return locale.startsWith('es') ? `hace ${hours}h`: `${hours}h ago`
-  if (days < 7)   return locale.startsWith('es') ? `hace ${days}d` : `${days}d ago`
+  if (mins < 1)   return es ? 'ahora'          : 'just now'
+  if (mins < 60)  return es ? `hace ${mins}m`  : `${mins}m ago`
+  if (hours < 24) return es ? `hace ${hours}h` : `${hours}h ago`
+  if (days < 7)   return es ? `hace ${days}d`  : `${days}d ago`
   return date.toLocaleDateString(locale, { day: 'numeric', month: 'short' })
 }
 
@@ -108,6 +109,7 @@ export function NotificationBell({ userId }: { userId: string }) {
   const unread = notifications.filter((n) => !n.read).length
 
   async function handleMarkAllRead() {
+    if (!notifications.some((n) => !n.read)) return
     await markAllNotificationsReadAction()
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
   }
