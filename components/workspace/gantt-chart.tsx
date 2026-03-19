@@ -1,8 +1,9 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import type { CSSProperties } from 'react'
 import { useTranslations } from 'next-intl'
-import { ChevronLeft, CalendarDays, CalendarOff, Layers, ListTodo, CheckCircle2, AlertCircle, PauseCircle } from 'lucide-react'
+import { ChevronLeft, CalendarDays, CalendarOff, Layers, ListTodo, CheckCircle2, AlertCircle, PauseCircle, Info, X } from 'lucide-react'
 import Link from 'next/link'
 import { APP_LOCALE } from '@/lib/constants'
 
@@ -52,6 +53,20 @@ const PRIORITY_COLOR: Record<string, string> = {
   LOW:    '#64748b',
 }
 
+/* Tailwind class maps — used where a static class suffices */
+const PRIORITY_BG: Record<string, string> = {
+  URGENT: 'bg-red-500',
+  HIGH:   'bg-orange-500',
+  MEDIUM: 'bg-indigo-500',
+  LOW:    'bg-slate-500',
+}
+const PRIORITY_BADGE: Record<string, string> = {
+  URGENT: 'bg-red-500/[0.12] text-red-500',
+  HIGH:   'bg-orange-500/[0.12] text-orange-500',
+  MEDIUM: 'bg-indigo-500/[0.12] text-indigo-500',
+  LOW:    'bg-slate-500/[0.12] text-slate-500',
+}
+
 const PRIORITY_LABEL: Record<string, string> = {
   URGENT: 'Urgente',
   HIGH:   'Alta',
@@ -69,7 +84,8 @@ const STATUS_LABEL: Record<string, string> = {
 /* ─────────────────────── Pure helpers ─────────────────────── */
 
 function datePct(d: Date, start: Date, totalMs: number) {
-  return ((d.getTime() - start.getTime()) / totalMs) * 100
+  // Round to 3 decimals to avoid SSR/client hydration mismatch from float precision
+  return Math.round(((d.getTime() - start.getTime()) / totalMs) * 100 * 1000) / 1000
 }
 
 function fmtShort(iso: string) {
@@ -171,13 +187,19 @@ function applyPreset(preset: RangePreset, today: Date, fullStart: Date, fullEnd:
   return { start, end }
 }
 
+/* Tiny inline separator for the detail strip */
+function Sep() {
+  return <div className="w-px h-3 bg-border/50 shrink-0" />
+}
+
 /* ─────────────────────── Component ─────────────────────────── */
 
 export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartProps) {
   const t = useTranslations('timeline')
   const [hoveredBar, setHoveredBar] = useState<string | null>(null)
+  const [tappedBar,  setTappedBar]  = useState<string | null>(null)
   const [viewMode,   setViewMode]   = useState<ViewMode>('projects')
-  const [rangePreset, setRangePreset] = useState<RangePreset>('3m')
+  const [rangePreset, setRangePreset] = useState<RangePreset>('1m')
 
   const today = useMemo(() => new Date(), [])
 
@@ -261,8 +283,8 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
     return `${s} — ${e}`
   })()
 
-  /* ── Column width constant for calculations (w-56 = 224px) ── */
-  const COL_CLASS = 'w-56 shrink-0'
+  /* ── Column width: 140px on mobile, 224px on sm+ ── */
+  const COL_CLASS = 'w-[110px] sm:w-56 shrink-0 sticky left-0 z-10 gantt-sticky-col'
 
   /* ── Grid background — inline %s are unavoidable for runtime date math ── */
   function GridBg() {
@@ -278,14 +300,16 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
             style={{ left: `${m.leftPct}%`, width: `${m.widthPct}%` }}
           />
         ))}
-        {/* Week dividers */}
-        {weekMarks.map((wm, i) => (
-          <div
-            key={i}
-            className="absolute inset-y-0 border-l border-dashed border-border/40 pointer-events-none"
-            style={{ left: `${wm.pct}%` }}
-          />
-        ))}
+        {/* Week dividers — hidden on mobile, visible sm+ */}
+        <div className="hidden sm:contents">
+          {weekMarks.map((wm, i) => (
+            <div
+              key={i}
+              className="absolute inset-y-0 border-l border-dashed border-border/40 pointer-events-none"
+              style={{ left: `${wm.pct}%` }}
+            />
+          ))}
+        </div>
         {/* Today: tinted column + hard line */}
         {showToday && (
           <>
@@ -310,19 +334,19 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
     return (
       <div className="flex border-b border-border/70 shrink-0 bg-muted/[0.04] shadow-[0_1px_0_0_hsl(var(--border)/0.6)]">
         {/* Column label cell */}
-        <div className={`${COL_CLASS} border-r border-border/50 flex items-center px-4 h-[68px] bg-muted/[0.04]`}>
+        <div className={`${COL_CLASS} border-r border-border/50 flex items-center px-3 sm:px-4 h-[48px] sm:h-[68px] bg-muted/[0.04]`}>
           <div className="flex flex-col gap-0.5">
-            <span className="text-[10px] font-black text-foreground/70 uppercase tracking-[0.18em]">
+            <span className="text-[9px] sm:text-[10px] font-black text-foreground/70 uppercase tracking-[0.18em]">
               {viewMode === 'projects' ? t('projectColumn') : t('taskColumn')}
             </span>
-            <span className="text-[9px] text-muted-foreground/35 font-medium">
+            <span className="hidden sm:block text-[9px] text-muted-foreground/35 font-medium">
               {rangeLabel}
             </span>
           </div>
         </div>
 
         {/* Date columns */}
-        <div className="flex-1 relative overflow-hidden h-[68px]">
+        <div className="flex-1 relative overflow-hidden h-[48px] sm:h-[68px]">
           {/* Month name row */}
           {months.map((m, i) => {
             const d = new Date(rangeStart.getFullYear(), rangeStart.getMonth() + i, 1)
@@ -330,7 +354,7 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
             return (
               <div
                 key={i}
-                className={`absolute top-0 h-[44px] flex items-center gap-1.5
+                className={`absolute top-0 h-[48px] sm:h-[44px] flex items-center gap-1.5
                             ${i > 0 ? 'border-l border-border/40' : ''}
                             ${isCurrentMonth ? 'bg-primary/[0.05]' : m.even ? 'bg-muted/[0.04]' : ''}`}
                 style={{ left: `${m.leftPct}%`, width: `${m.widthPct}%` }}
@@ -348,8 +372,8 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
             )
           })}
 
-          {/* Week numbers row */}
-          <div className="absolute inset-x-0 bottom-0 h-[24px] border-t border-border/40 bg-muted/[0.03]">
+          {/* Week numbers row — hidden on mobile */}
+          <div className="hidden sm:block absolute inset-x-0 bottom-0 h-[24px] border-t border-border/40 bg-muted/[0.03]">
             {weekMarks.map((wm, i) => (
               <div
                 key={i}
@@ -391,8 +415,8 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
       <div className="px-4 md:px-6 pt-4 pb-3 shrink-0">
         <div className="glass rounded-2xl overflow-hidden shadow-card">
           <div className="gradient-brand-gold h-[3px]" />
-          <div className="px-4 sm:px-5 py-3 sm:py-3.5 flex items-center gap-2 sm:gap-3 flex-wrap">
-
+          {/* Row 1: back link + title */}
+          <div className="px-4 sm:px-5 pt-3 pb-2 flex items-center gap-2 sm:gap-3">
             <Link
               href={`/dashboard/${slug}`}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border
@@ -400,28 +424,31 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                          hover:text-foreground hover:bg-accent hover:border-primary/30 transition-all"
             >
               <ChevronLeft className="w-3.5 h-3.5 shrink-0" />
-              <span className="truncate max-w-[120px]">{workspaceName}</span>
+              <span className="truncate max-w-[100px] sm:max-w-[120px]">{workspaceName}</span>
             </Link>
 
             <div className="w-px h-5 bg-border shrink-0" />
 
-            <div className="flex items-center gap-2.5 flex-1 min-w-0">
-              <div className="w-8 h-8 rounded-lg gradient-brand flex items-center justify-center shrink-0 shadow-glow-sm">
-                <CalendarDays className="w-4 h-4 text-white" />
+            <div className="flex items-center gap-2 flex-1 min-w-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg gradient-brand flex items-center justify-center shrink-0 shadow-glow-sm">
+                <CalendarDays className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
               </div>
               <div className="min-w-0">
-                <h1 className="font-bold text-[0.875rem] tracking-tight">{t('title')}</h1>
-                <p className="text-[11px] text-muted-foreground/60 tabular-nums">{rangeLabel}</p>
+                <h1 className="font-bold text-[0.8125rem] sm:text-[0.875rem] tracking-tight">{t('title')}</h1>
+                <p className="text-[10px] sm:text-[11px] text-muted-foreground/60 tabular-nums hidden sm:block">{rangeLabel}</p>
               </div>
             </div>
+          </div>
 
+          {/* Row 2: controls */}
+          <div className="px-4 sm:px-5 pb-3 flex items-center gap-2">
             {/* Range preset selector */}
             <div className="flex items-center rounded-lg border border-border overflow-hidden shrink-0">
               {(['1m', '3m', '6m', 'all'] as RangePreset[]).map((preset, i) => (
                 <button
                   key={preset}
                   onClick={() => setRangePreset(preset)}
-                  className={`px-2.5 py-2 text-[11px] font-semibold transition-colors
+                  className={`px-2 sm:px-2.5 py-1.5 sm:py-2 text-[11px] font-semibold transition-colors
                               ${i > 0 ? 'border-l border-border' : ''}
                               ${rangePreset === preset
                                 ? 'bg-primary/[0.08] text-primary'
@@ -438,7 +465,7 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
             <div className="flex items-center rounded-lg border border-border overflow-hidden shrink-0">
               <button
                 onClick={() => setViewMode('projects')}
-                className={`flex items-center gap-1.5 px-3 py-2 text-[11.5px] font-semibold
+                className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-[11.5px] font-semibold
                             transition-colors border-r border-border
                             ${viewMode === 'projects'
                               ? 'bg-primary text-white'
@@ -449,7 +476,7 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
               </button>
               <button
                 onClick={() => setViewMode('tasks')}
-                className={`flex items-center gap-1.5 px-3 py-2 text-[11.5px] font-semibold
+                className={`flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 text-[11px] sm:text-[11.5px] font-semibold
                             transition-colors
                             ${viewMode === 'tasks'
                               ? 'bg-primary text-white'
@@ -459,7 +486,6 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                 {t('modeTasks')}
               </button>
             </div>
-
           </div>
         </div>
       </div>
@@ -485,13 +511,16 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
             </div>
           </div>
         ) : (
-          <div className="flex-1 min-w-[640px] md:min-w-0 rounded-xl border border-border bg-card shadow-card
+          <div className="flex-1 min-w-0 sm:min-w-[640px] md:min-w-0 rounded-xl border border-border bg-card shadow-card
                           overflow-hidden flex flex-col min-h-0">
 
             <DateHeader />
 
             {/* Rows — the ONLY scroll container */}
-            <div className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col">
+            <div
+              className="flex-1 overflow-y-auto overflow-x-hidden flex flex-col"
+              onClick={() => setTappedBar(null)}
+            >
 
               {/* ══ PROJECTS MODE ══ */}
               {viewMode === 'projects' && datedProjects.map((project, idx) => {
@@ -502,14 +531,29 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                 const status   = getStatus(project, today)
                 const days     = getDays(project.startDate!, project.endDate!)
                 const isHover  = hoveredBar === project.id
+                const isTappedP = tappedBar === project.id
+                const showTooltipP = isHover || isTappedP
                 const isOnHold = project.status === 'ON_HOLD'
+
+                // Smart positioning for project tooltip
+                const nextProject = datedProjects[idx + 1]
+                const nextProjectBounds = nextProject?.startDate && nextProject.endDate ? getBarBounds(
+                  new Date(nextProject.startDate), new Date(nextProject.endDate), rangeStart, totalMs,
+                ) : null
+                const projectHasOverlapBelow = bounds && nextProjectBounds && (
+                  bounds.left < (nextProjectBounds.left + nextProjectBounds.width) &&
+                  (bounds.left + bounds.width) > nextProjectBounds.left
+                )
+                const projectTooltipPos = projectHasOverlapBelow
+                  ? `top-1/2 -translate-y-1/2 ${bounds && (bounds.left + bounds.width) < 60 ? 'left-[calc(100%+4px)]' : 'right-[calc(100%+4px)]'}`
+                  : `top-[calc(100%+6px)] ${bounds && bounds.left > 50 ? 'right-0' : 'left-0'}`
                 const todayOnBar = (() => {
                   if (!project.startDate || !project.endDate) return null
                   const s = new Date(project.startDate).getTime()
                   const e = new Date(project.endDate).getTime()
                   const n = today.getTime()
                   if (n < s || n > e) return null
-                  return ((n - s) / (e - s)) * 100
+                  return Math.round(((n - s) / (e - s)) * 100 * 10000) / 10000
                 })()
 
                 return (
@@ -520,21 +564,20 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                                 ${idx % 2 !== 0 ? 'bg-muted/[0.03]' : 'bg-card'}
                                 ${isHover ? '!bg-primary/[0.05]' : 'hover:bg-muted/[0.04]'}
                                 ${isOnHold ? 'opacity-60' : ''}`}
+                    style={{ '--pc': project.color } as CSSProperties}
                   >
                     {/* Name column */}
                     <div className={`${COL_CLASS} border-r border-border/40 flex items-center relative overflow-hidden h-14`}>
                       <div
-                        className={`absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-r-sm transition-opacity ${isHover ? 'opacity-100' : 'opacity-50'}`}
-                        style={{ background: project.color }}
+                        className={`gantt-pc-bg absolute left-0 top-2.5 bottom-2.5 w-[3px] rounded-r-sm transition-opacity ${isHover ? 'opacity-100' : 'opacity-50'}`}
                       />
                       <div className="pl-5 pr-3 flex items-center gap-2.5 w-full min-w-0">
                         <div
-                          className="w-[30px] h-[30px] rounded-lg shrink-0 flex items-center justify-center text-[12px] font-black text-white select-none relative"
-                          style={{ background: project.color }}
+                          className="gantt-pc-bg w-[30px] h-[30px] rounded-lg shrink-0 flex items-center justify-center text-[12px] font-black text-white select-none relative"
                         >
                           {project.name.charAt(0).toUpperCase()}
                           {status.pulse && (
-                            <span className="absolute inset-0 rounded-lg animate-ping opacity-25" style={{ background: project.color }} />
+                            <span className="gantt-pc-bg absolute inset-0 rounded-lg animate-ping opacity-25" />
                           )}
                           {isOnHold && (
                             <span className="absolute -top-1 -right-1 bg-card rounded-full">
@@ -547,9 +590,6 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                             <span className="text-[12.5px] font-bold truncate" title={project.name}>
                               {project.name}
                             </span>
-                            <span className={`text-[8.5px] font-bold px-2 py-[3px] rounded-full shrink-0 ${status.cls}`}>
-                              {status.label}
-                            </span>
                           </div>
                           <p className="text-[10px] text-muted-foreground/50 tabular-nums mt-0.5 truncate">
                             {fmtShort(project.startDate!)} – {fmtShort(project.endDate!)} · {days}d
@@ -557,9 +597,9 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                           {progress > 0 && (
                             <div className="flex items-center gap-1.5 mt-1">
                               <div className="flex-1 h-[4px] rounded-full bg-border/50 overflow-hidden">
-                                <div className="h-full rounded-full" style={{ width: `${progress}%`, background: project.color, opacity: 0.7 }} />
+                                <div className="gantt-pc-bg h-full rounded-full opacity-70" style={{ width: `${progress}%` }} />
                               </div>
-                              <span className="text-[9px] font-bold shrink-0 tabular-nums" style={{ color: project.color, opacity: 0.75 }}>
+                              <span className="gantt-pc-text text-[9px] font-bold shrink-0 tabular-nums opacity-75">
                                 {progress}%
                               </span>
                             </div>
@@ -579,16 +619,12 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                           onMouseLeave={() => setHoveredBar(null)}
                         >
                           <div
-                            className={`absolute inset-0 rounded-[6px] overflow-hidden gantt-shimmer ${isOnHold ? 'opacity-50' : ''}`}
-                            style={{
-                              background: `linear-gradient(180deg,${project.color}f0 0%,${project.color}cc 100%)`,
-                              boxShadow: `0 2px 6px ${project.color}66,0 0 0 1px ${project.color}33,inset 0 1px 0 rgba(255,255,255,.22)`,
-                            }}
+                            className={`gantt-pc-bar absolute inset-0 rounded-[6px] overflow-hidden gantt-shimmer ${isOnHold ? 'opacity-50' : ''}`}
                           >
                             {progress > 0 && progress < 100 && (
                               <div
-                                className="absolute top-0 left-0 h-full"
-                                style={{ width: `${progress}%`, background: 'rgba(255,255,255,.15)', borderRight: '2px solid rgba(255,255,255,.40)' }}
+                                className="gantt-bar-progress absolute top-0 left-0 h-full"
+                                style={{ width: `${progress}%` }}
                               />
                             )}
                           </div>
@@ -596,35 +632,30 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                             <span className="text-[11px] font-bold text-white truncate flex-1 drop-shadow-[0_1px_3px_rgba(0,0,0,.5)] leading-none">
                               {project.name}
                             </span>
+                            {/* Date — desktop only */}
                             {project.endDate && (
-                              <span className="text-[9px] font-medium text-white/70 shrink-0 whitespace-nowrap leading-none">
+                              <span className="hidden sm:inline text-[9px] font-medium text-white/70 shrink-0 whitespace-nowrap leading-none">
                                 {fmtShort(project.endDate)}
                               </span>
                             )}
+                            {/* Info button — mobile only */}
+                            <button
+                              className="sm:hidden w-[18px] h-[18px] rounded-full flex items-center justify-center bg-white/25 hover:bg-white/40 transition-colors shrink-0"
+                              onClick={(e) => { e.stopPropagation(); setTappedBar(isTappedP ? null : project.id) }}
+                              aria-label="Ver detalles"
+                            >
+                              {isTappedP
+                                ? <X className="w-2.5 h-2.5 text-white" />
+                                : <Info className="w-2.5 h-2.5 text-white" />
+                              }
+                            </button>
                           </div>
                           {todayOnBar !== null && (
                             <div
                               className="absolute top-[3px] bottom-[3px] w-[2px] rounded-full z-20 pointer-events-none bg-white/90 shadow-sm"
                               style={{ left: `${todayOnBar}%` }}
+                              suppressHydrationWarning
                             />
-                          )}
-                          {isHover && (
-                            <div className={`absolute top-[calc(100%+6px)] z-50 pointer-events-none
-                                           flex items-center gap-2 px-2.5 py-1.5 rounded-xl
-                                           bg-popover border border-border/70 shadow-2xl whitespace-nowrap
-                                           ${bounds.left > 50 ? 'right-0' : 'left-0'}`}>
-                              <div className="w-2 h-2 rounded-sm shrink-0" style={{ background: project.color }} />
-                              <span className="text-[11px] font-semibold text-foreground">{project.name}</span>
-                              <span className="text-[10px] text-muted-foreground">
-                                {fmtShort(project.startDate!)} – {fmtShort(project.endDate!)} · {days}d
-                              </span>
-                              {progress > 0 && (
-                                <>
-                                  <div className="w-px h-3 bg-border/60" />
-                                  <span className="text-[10px] font-bold" style={{ color: project.color }}>{progress}%</span>
-                                </>
-                              )}
-                            </div>
                           )}
                         </div>
                       )}
@@ -640,22 +671,19 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                   <div key={project.id}>
                     {/* Project group header */}
                     <div
-                      className="flex h-9 border-b border-border/50"
-                      style={{
-                        background: `color-mix(in srgb,${project.color} 12%,var(--card))`,
-                        borderBottom: `2px solid ${project.color}33`,
-                      }}
+                      className="flex h-9 gantt-group-header"
+                      style={{ '--pc': project.color } as CSSProperties}
                     >
-                      <div className={`${COL_CLASS} border-r border-border/35 flex items-center gap-2 px-4`}>
-                        <div className="w-2 h-2 rounded-sm shrink-0" style={{ background: project.color }} />
-                        <span className="text-[11px] font-bold truncate" style={{ color: project.color }}>
+                      <div className={`${COL_CLASS} border-r border-border/35 flex items-center gap-1.5 px-3 sm:px-4`}>
+                        <div className="gantt-pc-bg w-2 h-2 rounded-sm shrink-0" />
+                        <span className="gantt-pc-text text-[10.5px] sm:text-[11px] font-bold truncate">
                           {project.name}
                         </span>
                         <span className="text-[9px] font-semibold text-muted-foreground/50 ml-auto shrink-0">
                           {projectTasks.length} tarea{projectTasks.length !== 1 ? 's' : ''}
                         </span>
                       </div>
-                      <div className="flex-1" style={{ background: `color-mix(in srgb,${project.color} 4%,transparent)` }} />
+                      <div className="gantt-group-bar-area flex-1" />
                     </div>
 
                     {/* Task rows */}
@@ -675,9 +703,31 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
 
                       // Bar color: done=green, overdue=red, else priority color
                       const barColor  = isDone ? '#22c55e' : isOverdue ? '#ef4444' : PRIORITY_COLOR[task.priority] ?? project.color
+                      const avatarBg  = task.assignee
+                        ? `hsl(${task.assignee.id.charCodeAt(0) * 137 % 360},55%,50%)`
+                        : '#64748b'
 
                       // Task duration label
                       const durationDays = getDays(barStartDate.toISOString(), task.dueDate)
+
+                      // Smart tooltip positioning: check if next task bar overlaps horizontally
+                      const nextTask = projectTasks[tIdx + 1]
+                      const nextBounds = nextTask?.dueDate ? getBarBounds(
+                        nextTask.startDate ? new Date(nextTask.startDate) : new Date(nextTask.createdAt),
+                        new Date(nextTask.dueDate), rangeStart, totalMs,
+                      ) : null
+                      const hasOverlapBelow = bounds && nextBounds && (
+                        bounds.left < (nextBounds.left + nextBounds.width) &&
+                        (bounds.left + bounds.width) > nextBounds.left
+                      )
+
+                      const isTapped    = tappedBar === task.id
+                      const showTooltip = isHover || isTapped
+
+                      // Tooltip position classes
+                      const tooltipPos = hasOverlapBelow
+                        ? `top-1/2 -translate-y-1/2 ${bounds && (bounds.left + bounds.width) < 60 ? 'left-[calc(100%+4px)]' : 'right-[calc(100%+4px)]'}`
+                        : `top-[calc(100%+6px)] ${bounds && bounds.left > 50 ? 'right-0' : 'left-0'}`
 
                       return (
                         <div
@@ -686,21 +736,18 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                                       transition-colors duration-75
                                       ${tIdx % 2 !== 0 ? 'bg-muted/[0.03]' : 'bg-card'}
                                       ${isHover ? '!bg-primary/[0.04]' : 'hover:bg-muted/[0.04]'}`}
+                          style={{ '--bc': barColor, '--av': avatarBg } as CSSProperties}
                         >
                           {/* Name column */}
-                          <div className={`${COL_CLASS} border-r border-border/35 flex items-center pl-7 pr-3 relative h-11`}>
+                          <div className={`${COL_CLASS} border-r border-border/35 flex items-center pl-5 sm:pl-7 pr-2 sm:pr-3 relative h-11`}>
                             <div
-                              className="absolute left-4 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-full"
-                              style={{ background: PRIORITY_COLOR[task.priority] ?? '#6366f1' }}
+                              className={`absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 w-[2px] h-4 rounded-full ${PRIORITY_BG[task.priority] ?? 'bg-indigo-500'}`}
                             />
-                            <div className="flex items-center gap-2 w-full min-w-0">
+
+                            {/* Desktop: avatar + full info */}
+                            <div className="hidden sm:flex items-center gap-2 w-full min-w-0">
                               <div
-                                className="w-[26px] h-[26px] rounded-full shrink-0 flex items-center justify-center text-[9px] font-black text-white overflow-hidden"
-                                style={{
-                                  background: task.assignee
-                                    ? `hsl(${task.assignee.id.charCodeAt(0) * 137 % 360},55%,50%)`
-                                    : '#64748b',
-                                }}
+                                className="w-[26px] h-[26px] rounded-full shrink-0 flex items-center justify-center text-[9px] font-black text-white overflow-hidden bg-[var(--av)]"
                               >
                                 {task.assignee?.image
                                   // eslint-disable-next-line @next/next/no-img-element
@@ -720,15 +767,6 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-1.5 mt-0.5">
-                                  <span
-                                    className="text-[8.5px] font-bold px-1 py-[1px] rounded"
-                                    style={{
-                                      background: `${PRIORITY_COLOR[task.priority] ?? '#6366f1'}1f`,
-                                      color: PRIORITY_COLOR[task.priority] ?? '#6366f1',
-                                    }}
-                                  >
-                                    {PRIORITY_LABEL[task.priority]}
-                                  </span>
                                   {task.subtaskCount > 0 && (
                                     <span className="text-[8.5px] font-semibold text-muted-foreground/50 bg-muted/60 px-1 py-[1px] rounded">
                                       {task.subtaskCount} sub
@@ -739,6 +777,18 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                                   </span>
                                 </div>
                               </div>
+                            </div>
+
+                            {/* Mobile: just the title */}
+                            <div className="sm:hidden flex-1 min-w-0 flex items-center gap-1">
+                              {isDone && <CheckCircle2 className="w-3 h-3 text-emerald-500 shrink-0" />}
+                              {isOverdue && <AlertCircle className="w-3 h-3 text-red-400 shrink-0" />}
+                              <span
+                                className={`text-[11px] font-medium truncate ${isDone ? 'line-through text-muted-foreground/50' : ''}`}
+                                title={task.title}
+                              >
+                                {task.title}
+                              </span>
                             </div>
                           </div>
 
@@ -753,27 +803,16 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                                 onMouseLeave={() => setHoveredBar(null)}
                               >
                                 <div
-                                  className={`absolute inset-0 rounded-[5px] overflow-hidden ${isDone ? 'opacity-70' : ''}`}
-                                  style={{
-                                    background: `linear-gradient(180deg,${barColor}d9 0%,${barColor}b3 100%)`,
-                                    boxShadow: `0 1px 4px ${barColor}55,inset 0 1px 0 rgba(255,255,255,.18)`,
-                                    // Dashed border when using createdAt fallback — signals "approximate start"
-                                    outline: usedCreatedAt ? `1.5px dashed ${barColor}80` : 'none',
-                                    outlineOffset: '-1px',
-                                  }}
+                                  className={`gantt-bc-bar absolute inset-0 rounded-[5px] overflow-hidden ${isDone ? 'opacity-70' : ''} ${usedCreatedAt ? 'gantt-bc-approx' : ''}`}
                                 />
-                                <div className="absolute inset-0 flex items-center px-2 z-10 overflow-hidden rounded-[5px]">
+                                <div className="absolute inset-0 flex items-center pl-2 pr-6 z-10 overflow-hidden rounded-[5px]">
                                   <span className="text-[9.5px] font-semibold text-white truncate flex-1 drop-shadow-[0_1px_2px_rgba(0,0,0,.5)] leading-none">
                                     {task.title}
                                   </span>
                                 </div>
+                                {/* Avatar — desktop only, inside bar */}
                                 <div
-                                  className="absolute top-1/2 -translate-y-1/2 -right-2.5 z-20 w-[22px] h-[22px] rounded-full flex items-center justify-center text-[8px] font-black text-white overflow-hidden ring-2 ring-card shadow-sm"
-                                  style={{
-                                    background: task.assignee
-                                      ? `hsl(${task.assignee.id.charCodeAt(0) * 137 % 360},55%,50%)`
-                                      : '#64748b',
-                                  }}
+                                  className="absolute top-1/2 -translate-y-1/2 right-1 z-20 w-[18px] h-[18px] rounded-full hidden sm:flex items-center justify-center text-[7px] font-black text-white overflow-hidden ring-[1.5px] ring-card shadow-sm bg-[var(--av)]"
                                 >
                                   {task.assignee?.image
                                     // eslint-disable-next-line @next/next/no-img-element
@@ -781,39 +820,17 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                                     : getInitials(task.assignee?.name ?? null)
                                   }
                                 </div>
-                                {isHover && (
-                                  <div className={`absolute top-[calc(100%+6px)] z-50 pointer-events-none
-                                                 flex items-center gap-2 px-2.5 py-1.5 rounded-xl
-                                                 bg-popover border border-border/70 shadow-2xl whitespace-nowrap
-                                                 ${bounds.left > 50 ? 'right-0' : 'left-0'}`}>
-                                    <div className="w-2 h-2 rounded-sm shrink-0" style={{ background: barColor }} />
-                                    <span className="text-[11px] font-semibold text-foreground truncate max-w-[180px]">{task.title}</span>
-                                    <div className="w-px h-3 bg-border/60" />
-                                    <span className="text-[10px] text-muted-foreground">{durationDays}d</span>
-                                    {task.subtaskCount > 0 && (
-                                      <>
-                                        <div className="w-px h-3 bg-border/60" />
-                                        <span className="text-[10px] text-muted-foreground">{task.subtaskCount} subtarea{task.subtaskCount !== 1 ? 's' : ''}</span>
-                                      </>
-                                    )}
-                                    <div className="w-px h-3 bg-border/60" />
-                                    <span className="text-[10px] text-muted-foreground">{task.assignee?.name ?? t('unassigned')}</span>
-                                    <div className="w-px h-3 bg-border/60" />
-                                    <span className="text-[10px] text-muted-foreground tabular-nums">{fmtShort(task.dueDate!)}</span>
-                                    {STATUS_LABEL[task.status] && (
-                                      <>
-                                        <div className="w-px h-3 bg-border/60" />
-                                        <span className="text-[10px]" style={{ color: barColor }}>{STATUS_LABEL[task.status]}</span>
-                                      </>
-                                    )}
-                                    {usedCreatedAt && (
-                                      <>
-                                        <div className="w-px h-3 bg-border/60" />
-                                        <span className="text-[9px] text-muted-foreground/60 italic">inicio aprox.</span>
-                                      </>
-                                    )}
-                                  </div>
-                                )}
+                                {/* Info button — mobile only */}
+                                <button
+                                  className="absolute top-1/2 -translate-y-1/2 right-1 z-20 w-[18px] h-[18px] rounded-full sm:hidden flex items-center justify-center bg-white/25 hover:bg-white/40 transition-colors"
+                                  onClick={(e) => { e.stopPropagation(); setTappedBar(isTapped ? null : task.id) }}
+                                  aria-label="Ver detalles"
+                                >
+                                  {isTapped
+                                    ? <X className="w-2.5 h-2.5 text-white" />
+                                    : <Info className="w-2.5 h-2.5 text-white" />
+                                  }
+                                </button>
                               </div>
                             )}
                           </div>
@@ -833,6 +850,59 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
               </div>
 
             </div>
+
+            {/* ── Detail strip — fixed at bottom of Gantt card, never overlaps bars ── */}
+            {(() => {
+              const activeId = hoveredBar ?? tappedBar
+              if (!activeId) return null
+
+              const activeTask = tasks.find(t => t.id === activeId)
+              if (activeTask) {
+                const bs = activeTask.startDate ? new Date(activeTask.startDate) : new Date(activeTask.createdAt)
+                const approx = !activeTask.startDate
+                const dur = getDays(bs.toISOString(), activeTask.dueDate!)
+                const col = activeTask.status === 'DONE' ? '#22c55e'
+                  : new Date(activeTask.dueDate!) < today && activeTask.status !== 'DONE' ? '#ef4444'
+                  : PRIORITY_COLOR[activeTask.priority] ?? '#6366f1'
+                return (
+                  <div className="border-t border-border/50 bg-card/95 backdrop-blur-sm px-4 py-2
+                                  flex items-center gap-2 overflow-x-auto shrink-0
+                                  animate-in fade-in slide-in-from-bottom-1 duration-150">
+                    <div className="w-2 h-2 rounded-full shrink-0" style={{ background: col }} />
+                    <span className="text-[11.5px] font-semibold text-foreground truncate max-w-[200px] shrink-0">{activeTask.title}</span>
+                    <Sep /><span className="text-[10.5px] text-muted-foreground shrink-0">{dur}d</span>
+                    {activeTask.subtaskCount > 0 && (<><Sep /><span className="text-[10.5px] text-muted-foreground shrink-0">{activeTask.subtaskCount} sub</span></>)}
+                    <Sep /><span className="text-[10.5px] text-muted-foreground shrink-0">{activeTask.assignee?.name ?? t('unassigned')}</span>
+                    <Sep /><span className="text-[10.5px] text-muted-foreground tabular-nums shrink-0">{fmtShort(activeTask.dueDate!)}</span>
+                    {STATUS_LABEL[activeTask.status] && (
+                      <><Sep /><span className="text-[10.5px] font-medium shrink-0" style={{ color: col }}>{STATUS_LABEL[activeTask.status]}</span></>
+                    )}
+                    {approx && (<><Sep /><span className="text-[10px] text-muted-foreground/55 italic shrink-0">inicio aprox.</span></>)}
+                  </div>
+                )
+              }
+
+              const activeProject = projects.find(p => p.id === activeId)
+              if (activeProject?.startDate && activeProject.endDate) {
+                const days = getDays(activeProject.startDate, activeProject.endDate)
+                const prog = getProgress(activeProject.startDate, activeProject.endDate, today)
+                return (
+                  <div className="border-t border-border/50 bg-card/95 backdrop-blur-sm px-4 py-2
+                                  flex items-center gap-2 overflow-x-auto shrink-0
+                                  animate-in fade-in slide-in-from-bottom-1 duration-150"
+                       style={{ '--pc': activeProject.color } as CSSProperties}>
+                    <div className="gantt-pc-bg w-2 h-2 rounded-sm shrink-0" />
+                    <span className="gantt-pc-text text-[11.5px] font-semibold shrink-0">{activeProject.name}</span>
+                    <Sep /><span className="text-[10.5px] text-muted-foreground shrink-0">{fmtShort(activeProject.startDate)} – {fmtShort(activeProject.endDate)}</span>
+                    <Sep /><span className="text-[10.5px] text-muted-foreground shrink-0">{days}d</span>
+                    {prog > 0 && (<><Sep /><span className="gantt-pc-text text-[10.5px] font-bold shrink-0">{prog}%</span></>)}
+                  </div>
+                )
+              }
+
+              return null
+            })()}
+
           </div>
         )}
       </div>
@@ -851,7 +921,7 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
               <div className="flex items-center gap-2 px-2.5 py-1 rounded-md bg-muted/60 border border-border/70">
                 {activePriorities.map((p) => (
                   <div key={p} className="flex items-center gap-1">
-                    <div className="w-2.5 h-2.5 rounded-[3px]" style={{ background: PRIORITY_COLOR[p] }} />
+                    <div className={`w-2.5 h-2.5 rounded-[3px] ${PRIORITY_BG[p]}`} />
                     <span className="text-[9.5px] font-medium text-muted-foreground">{PRIORITY_LABEL[p]}</span>
                   </div>
                 ))}
@@ -889,8 +959,9 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                   className="flex items-center gap-1.5 text-[11px] px-2.5 py-1 rounded-lg
                              border border-border/70 bg-muted/40 text-muted-foreground
                              hover:border-primary/30 hover:text-foreground transition-all"
+                  style={{ '--pc': p.color } as CSSProperties}
                 >
-                  <span className="w-2 h-2 rounded-[2px] shrink-0" style={{ background: p.color }} />
+                  <span className="gantt-pc-bg w-2 h-2 rounded-[2px] shrink-0" />
                   {p.name}
                 </span>
               ))}

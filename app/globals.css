@@ -2,6 +2,23 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* Register CSS custom properties so color-mix() resolves them correctly */
+@property --pc {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+@property --bc {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+@property --av {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
@@ -196,36 +213,33 @@
 }
 
 @layer base {
+  /* ─── Reset & base ─────────────────────────────────────────────────────── */
   * {
     @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "kern" 1, "liga" 1;
   }
   html {
     @apply font-sans;
     scroll-behavior: smooth;
   }
-  /* Scrollbar polish */
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  /* ─── Scrollbar polish ──────────────────────────────────────────────────── */
   ::-webkit-scrollbar        { width: 5px; height: 5px; }
   ::-webkit-scrollbar-track  { background: transparent; }
   ::-webkit-scrollbar-thumb  { @apply bg-border rounded-full; }
   ::-webkit-scrollbar-thumb:hover { @apply bg-muted-foreground/40; }
-}
 
-/* ─── Typography scale ────────────────────────────────────────────────────── */
-@layer base {
+  /* ─── Typography scale ──────────────────────────────────────────────────── */
   h1 { letter-spacing: -0.030em; font-weight: 700; }
   h2 { letter-spacing: -0.025em; font-weight: 700; }
   h3 { letter-spacing: -0.020em; font-weight: 600; }
   h4 { letter-spacing: -0.015em; font-weight: 600; }
-  /* Tabular numbers everywhere they matter */
   .tabular { font-variant-numeric: tabular-nums; }
-}
 
-/* ─── Input polish ────────────────────────────────────────────────────────── */
-@layer base {
+  /* ─── Input polish ──────────────────────────────────────────────────────── */
   input, textarea, select {
     color-scheme: light dark;
   }
@@ -664,7 +678,113 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.18) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, oklch(1 0 0 / 0.18) 50%, transparent 100%);
     animation: shimmer 2.4s ease-in-out infinite;
+  }
+
+  /* ── Gantt bar progress overlay ──────────────────────────────── */
+  .gantt-bar-progress {
+    background: oklch(1 0 0 / 0.15);
+    border-right: 2px solid oklch(1 0 0 / 0.40);
+  }
+
+  /*
+   * ── Gantt: CSS custom property color utilities ─────────────────
+   *
+   * Dynamic colors (project.color from DB, barColor ternary) are passed
+   * as CSS custom properties on ancestor elements so all visual styling
+   * stays in CSS classes instead of inline styles.
+   *
+   * --pc  → project color (set on project row / group header)
+   * --bc  → bar color (set on task row; computed: done/overdue/priority/project)
+   * --av  → avatar color (set on task row; HSL hash of assignee ID)
+   *
+   * Opacity equivalents for hex alpha suffixes:
+   *   f0 = 94%  cc = 80%  66 = 40%  33 = 20%
+   *   d9 = 85%  b3 = 70%  55 = 33%  80 = 50%
+   */
+
+  /* Project row — plain color fills */
+  .gantt-pc-bg   { background: var(--pc); }
+  .gantt-pc-text { color: var(--pc); }
+
+  /* Project bar gradient + shadow (replaces hex-alpha inline) */
+  .gantt-pc-bar {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--pc) 94%, transparent) 0%,
+      color-mix(in srgb, var(--pc) 80%, transparent) 100%
+    );
+    box-shadow:
+      0 2px 6px color-mix(in srgb, var(--pc) 40%, transparent),
+      0 0 0 1px color-mix(in srgb, var(--pc) 20%, transparent),
+      inset 0 1px 0 oklch(1 0 0 / 0.22);
+  }
+
+  /* Sticky name column — always on top of scrolling bar area */
+  .gantt-sticky-col {
+    background: var(--card);
+  }
+  .dark .gantt-sticky-col {
+    background: var(--card);
+  }
+
+  /* Project group header (tasks mode) */
+  .gantt-group-header {
+    background: color-mix(in srgb, var(--pc) 12%, var(--card));
+    border-bottom: 2px solid color-mix(in srgb, var(--pc) 20%, transparent);
+  }
+
+  /* Task group bar-area tint (tasks mode) */
+  .gantt-group-bar-area {
+    background: color-mix(in srgb, var(--pc) 4%, transparent);
+  }
+
+  /* Task bar gradient + shadow */
+  .gantt-bc-bar {
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--bc) 85%, transparent) 0%,
+      color-mix(in srgb, var(--bc) 70%, transparent) 100%
+    );
+    box-shadow:
+      0 1px 4px color-mix(in srgb, var(--bc) 33%, transparent),
+      inset 0 1px 0 oklch(1 0 0 / 0.18);
+  }
+
+  /* Dashed outline when bar start is approximate (createdAt fallback) */
+  .gantt-bc-approx {
+    outline: 1.5px dashed color-mix(in srgb, var(--bc) 50%, transparent);
+    outline-offset: -1px;
+  }
+
+  /* Bar color fills for tooltip elements */
+  .gantt-bc-dot  { background: var(--bc); }
+  .gantt-bc-text { color: var(--bc); }
+
+  /* ── Mobile safe-area utilities ──────────────────────────────── */
+  /*
+   * .mobile-safe-pb: main content padding — clears the floating bottom nav
+   * (80px) plus iOS safe-area-inset-bottom for iPhone X+ notches.
+   * md: resets to 0 (desktop sidebar layout, no bottom nav).
+   */
+  .mobile-safe-pb {
+    /* 16px (nav bottom gap) + 64px (bar h-16) + 26px (logo elevation) + 12px buffer = 118px */
+    padding-bottom: calc(118px + env(safe-area-inset-bottom, 0px));
+    @media (width >= 768px) { padding-bottom: 0; }
+  }
+
+  /*
+   * .mobile-bottom-nav: positions the floating pill above the home indicator.
+   * Uses max() so the nav never overlaps the home indicator bar on notchless
+   * iPhones either (minimum 16px from screen edge).
+   */
+  .mobile-bottom-nav {
+    bottom: max(16px, calc(16px + env(safe-area-inset-bottom, 0px)));
+  }
+
+  /* ── Sign-in aurora orb (Celtic gold, dark-only) ─────────────── */
+  .aurora-orb-gold {
+    background: radial-gradient(circle, oklch(0.82 0.18 75 / 0.08), transparent 70%);
   }
 }

@@ -53,7 +53,7 @@ export function CreateProjectButton({ workspaceId, workspaceSlug }: CreateProjec
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex items-center gap-1.5 px-4 py-2 gradient-brand text-white rounded-lg text-sm font-semibold hover:opacity-90 active:opacity-80 transition-opacity shadow-glow-sm"
+        className="flex items-center gap-1.5 px-4 py-2.5 gradient-brand text-white rounded-lg text-sm font-semibold hover:opacity-90 active:opacity-80 transition-opacity shadow-glow-sm min-h-[44px]"
       >
         <svg viewBox="0 0 16 16" className="w-3.5 h-3.5 fill-none stroke-current" strokeWidth={2.5}>
           <path strokeLinecap="round" d="M8 3v10M3 8h10" />

@@ -26,6 +26,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Danu — Gestión de proyectos para equipos',
   description: 'Organiza proyectos, tareas y equipos con Danu.',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    viewportFit: 'cover', // safe-area-inset iOS (iPhone X+)
+  },
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

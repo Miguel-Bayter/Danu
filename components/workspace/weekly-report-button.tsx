@@ -131,7 +131,7 @@ export function WeeklyReportButton({ workspaceId, workspaceName }: WeeklyReportB
           ref={triggerRef}
           onClick={handleOpen}
           disabled={isPending}
-          className="flex items-center gap-1 px-2.5 py-1.5 text-[12px] font-medium
+          className="flex items-center gap-1 px-2.5 py-2.5 text-[12px] font-medium min-h-[44px]
                      text-muted-foreground hover:text-foreground hover:bg-accent
                      rounded-l-md border-r border-border transition-colors disabled:opacity-50 whitespace-nowrap"
         >
@@ -143,7 +143,7 @@ export function WeeklyReportButton({ workspaceId, workspaceName }: WeeklyReportB
         <button
           onClick={handleGenerate}
           disabled={isPending}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium
+          className="flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium min-h-[44px]
                      text-muted-foreground hover:text-foreground hover:bg-accent
                      rounded-r-md transition-colors disabled:opacity-50"
         >

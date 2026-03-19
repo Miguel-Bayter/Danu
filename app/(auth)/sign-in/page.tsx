@@ -26,9 +26,8 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
                         bg-primary/[0.07] dark:bg-primary/[0.14] blur-[110px]" />
         <div className="absolute w-[550px] h-[550px] -bottom-[120px] -right-[130px] rounded-full
                         bg-violet-400/[0.06] dark:bg-violet-600/[0.16] blur-[100px]" />
-        <div className="absolute w-[380px] h-[380px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full
+        <div className="aurora-orb-gold absolute w-[380px] h-[380px] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 rounded-full
                         opacity-0 dark:opacity-100 blur-[90px]"
-          style={{ background: 'radial-gradient(circle, oklch(0.82 0.18 75 / 0.08), transparent 70%)' }}
         />
       </div>
 

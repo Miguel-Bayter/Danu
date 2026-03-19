@@ -29,6 +29,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
           userId={user.id}
           userImage={user.image}
           userName={user.name}
+          locale={locale}
         />
       }
     >

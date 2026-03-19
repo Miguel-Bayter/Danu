@@ -19,7 +19,7 @@ type SearchData = {
   }[]
 }
 
-export function CommandPalette() {
+export function CommandPalette({ showTrigger = true }: { showTrigger?: boolean }) {
   const t = useTranslations('commandPalette')
   const router = useRouter()
   const [open, setOpen] = useState(false)
@@ -33,7 +33,7 @@ export function CommandPalette() {
              navigator.userAgent.toUpperCase().includes('MAC'))
   }, [])
 
-  // Global Cmd+K / Ctrl+K
+  // Global Cmd+K / Ctrl+K + mobile custom event
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
@@ -41,8 +41,13 @@ export function CommandPalette() {
         setOpen((prev) => !prev)
       }
     }
+    function onOpen() { setOpen(true) }
     document.addEventListener('keydown', onKeyDown)
-    return () => document.removeEventListener('keydown', onKeyDown)
+    document.addEventListener('open-command-palette', onOpen)
+    return () => {
+      document.removeEventListener('keydown', onKeyDown)
+      document.removeEventListener('open-command-palette', onOpen)
+    }
   }, [])
 
   // Load data when palette opens
@@ -62,8 +67,8 @@ export function CommandPalette() {
 
   return (
     <>
-      {/* Trigger button — matches NavItem visual language */}
-      <button
+      {/* Trigger button — only rendered inside sidebar */}
+      {showTrigger && <button
         onClick={() => setOpen(true)}
         className="group flex items-center gap-2.5 w-full px-2.5 py-[7px] rounded-lg
                    text-[12.5px] font-medium text-muted-foreground dark:text-muted-foreground/80
@@ -86,7 +91,7 @@ export function CommandPalette() {
                         font-mono shrink-0 whitespace-nowrap">
           <span className="hidden sm:inline">{isMac ? '⌘K' : 'Ctrl K'}</span>
         </kbd>
-      </button>
+      </button>}
 
       {/* Modal overlay */}
       {open && (
@@ -95,8 +100,7 @@ export function CommandPalette() {
           onClick={() => setOpen(false)}
         >
           <div
-            className="bg-card border rounded-xl shadow-2xl w-full max-w-lg overflow-hidden"
-            style={{ maxWidth: 'min(512px, calc(100vw - 2rem))' }}
+            className="bg-card border rounded-xl shadow-2xl w-full max-w-[min(512px,calc(100vw-2rem))] overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <Command

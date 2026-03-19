@@ -68,20 +68,31 @@ export default async function WorkspacePage({ params }: WorkspacePageProps) {
               </p>
             </div>
           </div>
-          {/* Action bar */}
-          <div className="bg-card px-5 md:px-6 py-3 flex flex-wrap items-center gap-2 border-t border-border">
-            <WeeklyReportButton workspaceId={workspace.id} workspaceName={workspace.name} />
-            <Link
-              href={`/dashboard/${slug}/timeline`}
-              className="flex items-center gap-1.5 text-sm px-3 py-2 rounded-lg border border-border hover:bg-accent transition-colors font-medium"
-            >
-              <CalendarDays className="w-4 h-4" />
-              {t('timelineButton')}
-            </Link>
-            {canInvite && (
-              <InviteMemberButton workspaceId={workspace.id} workspaceName={workspace.name} />
-            )}
-            <div className="ml-auto">
+          {/* Action bar — mobile: 2 deliberate rows; desktop: 1 row */}
+          <div className="bg-card px-4 sm:px-6 py-3 border-t border-border space-y-2 sm:space-y-0">
+            {/* Row 1: utility actions */}
+            <div className="flex items-center gap-2">
+              <WeeklyReportButton workspaceId={workspace.id} workspaceName={workspace.name} />
+              <Link
+                href={`/dashboard/${slug}/timeline`}
+                className="flex items-center gap-1.5 text-sm px-3 py-2.5 rounded-lg border border-border hover:bg-accent transition-colors font-medium min-h-[44px]"
+              >
+                <CalendarDays className="w-4 h-4 shrink-0" />
+                <span>{t('timelineButton')}</span>
+              </Link>
+              {/* Desktop: show manage actions in same row */}
+              <div className="hidden sm:flex items-center gap-2 ml-auto">
+                {canInvite && <InviteMemberButton workspaceId={workspace.id} workspaceName={workspace.name} />}
+                <CreateProjectButton workspaceId={workspace.id} workspaceSlug={slug} />
+              </div>
+            </div>
+            {/* Row 2: manage actions — mobile only */}
+            <div className="flex items-center gap-2 sm:hidden">
+              {canInvite && (
+                <div className="flex-1">
+                  <InviteMemberButton workspaceId={workspace.id} workspaceName={workspace.name} fullWidth />
+                </div>
+              )}
               <CreateProjectButton workspaceId={workspace.id} workspaceSlug={slug} />
             </div>
           </div>

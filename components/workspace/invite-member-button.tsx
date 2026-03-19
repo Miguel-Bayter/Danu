@@ -8,9 +8,10 @@ import { Copy, Check } from 'lucide-react'
 interface InviteMemberButtonProps {
   workspaceId: string
   workspaceName: string
+  fullWidth?: boolean
 }
 
-export function InviteMemberButton({ workspaceId, workspaceName }: InviteMemberButtonProps) {
+export function InviteMemberButton({ workspaceId, workspaceName, fullWidth }: InviteMemberButtonProps) {
   const t = useTranslations('invitation')
   const [open, setOpen] = useState(false)
   const [githubUser, setGithubUser] = useState('')
@@ -55,7 +56,7 @@ export function InviteMemberButton({ workspaceId, workspaceName }: InviteMemberB
     <>
       <button
         onClick={handleOpen}
-        className="text-sm px-3 py-1.5 rounded-md border hover:bg-accent transition-colors"
+        className={`text-sm px-3 py-2.5 rounded-lg border hover:bg-accent transition-colors font-medium min-h-[44px]${fullWidth ? ' w-full' : ''}`}
       >
         {t('inviteButton')}
       </button>
