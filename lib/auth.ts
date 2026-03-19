@@ -1,5 +1,6 @@
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
+import Resend from 'next-auth/providers/resend'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { prisma } from '@/lib/prisma'
 import { authConfig } from '@/lib/auth.config'
@@ -11,6 +12,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: 'jwt' },
   providers: [
     ...authConfig.providers,
+    Resend({
+      apiKey: process.env.AUTH_RESEND_KEY,
+      from: process.env.EMAIL_FROM ?? 'Danu <noreply@danu.app>',
+    }),
     Credentials({
       credentials: { type: { type: 'text' } },
       async authorize(credentials) {
