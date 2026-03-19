@@ -3,8 +3,14 @@ import { getTranslations } from 'next-intl/server'
 import { LogoMark } from '@/components/ui/logo-mark'
 import { ThemeToggle } from '@/components/layout/theme-toggle'
 
-export default async function SignInPage() {
+interface SignInPageProps {
+  searchParams: Promise<{ callbackUrl?: string }>
+}
+
+export default async function SignInPage({ searchParams }: SignInPageProps) {
   const t = await getTranslations('auth.signIn')
+  const { callbackUrl } = await searchParams
+  const redirectTo = callbackUrl?.startsWith('/invite/') ? callbackUrl : '/dashboard'
 
   async function signInDemo() {
     'use server'
@@ -64,7 +70,7 @@ export default async function SignInPage() {
             <form
               action={async () => {
                 'use server'
-                await signIn('github', { redirectTo: '/dashboard' })
+                await signIn('github', { redirectTo })
               }}
             >
               <button

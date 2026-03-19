@@ -4,6 +4,8 @@ import { acceptInvitationAction } from '@/server/actions/invitation.actions'
 import { auth } from '@/lib/auth'
 import Link from 'next/link'
 
+export const dynamic = 'force-dynamic'
+
 interface InvitePageProps {
   params: Promise<{ token: string }>
 }
