@@ -862,7 +862,7 @@ export function GanttChart({ projects, tasks, slug, workspaceName }: GanttChartP
                 const approx = !activeTask.startDate
                 const dur = getDays(bs.toISOString(), activeTask.dueDate!)
                 const col = activeTask.status === 'DONE' ? '#22c55e'
-                  : new Date(activeTask.dueDate!) < today && activeTask.status !== 'DONE' ? '#ef4444'
+                  : new Date(activeTask.dueDate!) < today ? '#ef4444'
                   : PRIORITY_COLOR[activeTask.priority] ?? '#6366f1'
                 return (
                   <div className="border-t border-border/50 bg-card/95 backdrop-blur-sm px-4 py-2
