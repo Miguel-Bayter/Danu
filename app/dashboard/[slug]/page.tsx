@@ -1,6 +1,7 @@
 import { getWorkspaceAction } from '@/server/actions/workspace.actions'
-import { projectRepository } from '@/server/repositories/project.repository'
-import { taskRepository } from '@/server/repositories/task.repository'
+import { requireAuth } from '@/server/lib/auth'
+import * as projectService from '@/server/services/project.service'
+import * as taskService from '@/server/services/task.service'
 import { CreateProjectButton } from '@/components/project/create-project-button'
 import { ProjectCard } from '@/components/project/project-card'
 import { InviteMemberButton } from '@/components/workspace/invite-member-button'
@@ -20,16 +21,16 @@ interface WorkspacePageProps {
 
 export default async function WorkspacePage({ params }: WorkspacePageProps) {
   const { slug } = await params
-  const result = await getWorkspaceAction(slug)
+  const [result, userId] = await Promise.all([getWorkspaceAction(slug), requireAuth()])
   if (!result) notFound()
 
   const { workspace, role } = result
 
   const [projects, metrics, urgentTasks, healthScore] = await Promise.all([
-    projectRepository.findByWorkspace(workspace.id),
-    taskRepository.getWorkspaceMetrics(workspace.id),
-    taskRepository.findUrgentByWorkspace(workspace.id, 5),
-    taskRepository.getHealthScore(workspace.id),
+    projectService.getProjects(workspace.id, userId),
+    taskService.getWorkspaceMetrics(workspace.id),
+    taskService.getUrgentTasks(workspace.id, 5),
+    taskService.getWorkspaceHealthScore(workspace.id),
   ])
 
   const t = await getTranslations('workspace')

@@ -134,33 +134,6 @@ export const taskRepository = {
     return { total, done, overdue, activeProjects }
   },
 
-  async getHealthScore(workspaceId: string) {
-    const projectIds = await prisma.project
-      .findMany({ where: { workspaceId }, select: { id: true } })
-      .then((ps) => ps.map((p) => p.id))
-
-    if (projectIds.length === 0) return null
-
-    const baseWhere = { projectId: { in: projectIds }, parentId: null }
-    const now = new Date()
-
-    const [total, done, overdue] = await Promise.all([
-      prisma.task.count({ where: baseWhere }),
-      prisma.task.count({ where: { ...baseWhere, status: TaskStatus.DONE } }),
-      prisma.task.count({
-        where: { ...baseWhere, dueDate: { lt: now }, status: { not: TaskStatus.DONE } },
-      }),
-    ])
-
-    if (total === 0) return null
-
-    const completionRate = (done / total) * 100
-    const overduePenalty = (overdue / total) * 30
-    const score = Math.round(Math.max(0, Math.min(100, completionRate - overduePenalty)))
-
-    return { score, total, done, overdue }
-  },
-
   findCompletedThisWeek(workspaceId: string) {
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
     return prisma.task.findMany({

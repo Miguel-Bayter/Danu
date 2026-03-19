@@ -1,15 +1,9 @@
 'use server'
 
 import { requireAuth } from '@/server/lib/auth'
-import { taskRepository } from '@/server/repositories/task.repository'
+import * as taskService from '@/server/services/task.service'
 
 export async function getWeeklyReportDataAction(workspaceId: string) {
   await requireAuth()
-  const [metrics, healthScore, completedThisWeek, overdue] = await Promise.all([
-    taskRepository.getWorkspaceMetrics(workspaceId),
-    taskRepository.getHealthScore(workspaceId),
-    taskRepository.findCompletedThisWeek(workspaceId),
-    taskRepository.findOverdueByWorkspace(workspaceId),
-  ])
-  return { metrics, healthScore, completedThisWeek, overdue }
+  return taskService.getWeeklyReportData(workspaceId)
 }

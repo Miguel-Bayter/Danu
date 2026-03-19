@@ -96,3 +96,37 @@ export async function getTasks(projectId: string, userId: string) {
   await assertProjectMember(projectId, userId)
   return taskRepository.findByProject(projectId)
 }
+
+// ─── Workspace-level queries (called by pages and actions) ─────────────────────
+
+export function getWorkspaceMetrics(workspaceId: string) {
+  return taskRepository.getWorkspaceMetrics(workspaceId)
+}
+
+/**
+ * Calculates the Team Health Score from raw task counts.
+ * Formula: completionRate% - overduePenalty%  (clamped 0–100)
+ * Business logic lives here, not in the repository.
+ */
+export async function getWorkspaceHealthScore(workspaceId: string) {
+  const { total, done, overdue } = await taskRepository.getWorkspaceMetrics(workspaceId)
+  if (total === 0) return null
+  const completionRate  = (done   / total) * 100
+  const overduePenalty  = (overdue / total) * 30
+  const score = Math.round(Math.max(0, Math.min(100, completionRate - overduePenalty)))
+  return { score, total, done, overdue }
+}
+
+export function getUrgentTasks(workspaceId: string, limit = 5) {
+  return taskRepository.findUrgentByWorkspace(workspaceId, limit)
+}
+
+export async function getWeeklyReportData(workspaceId: string) {
+  const [metrics, healthScore, completedThisWeek, overdue] = await Promise.all([
+    getWorkspaceMetrics(workspaceId),
+    getWorkspaceHealthScore(workspaceId),
+    taskRepository.findCompletedThisWeek(workspaceId),
+    taskRepository.findOverdueByWorkspace(workspaceId),
+  ])
+  return { metrics, healthScore, completedThisWeek, overdue }
+}

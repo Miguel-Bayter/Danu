@@ -1,12 +1,11 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { TaskStatus, Priority, NotificationType } from '@prisma/client'
+import { TaskStatus, Priority } from '@prisma/client'
 import * as taskService from '@/server/services/task.service'
+import * as notificationService from '@/server/services/notification.service'
 import { requireAuth } from '@/server/lib/auth'
-import { notificationRepository } from '@/server/repositories/notification.repository'
-import { taskRepository } from '@/server/repositories/task.repository'
-import { projectRepository } from '@/server/repositories/project.repository'
+import * as projectService from '@/server/services/project.service'
 
 export async function createTaskAction(
   projectId: string,
@@ -32,16 +31,17 @@ export async function createTaskAction(
     dueDate: dueDateRaw ? new Date(dueDateRaw + 'T12:00:00.000Z') : undefined,
   })
 
-  // Notify assignee if different from creator
   if (task.assigneeId && task.assigneeId !== userId) {
-    const project = await projectRepository.findById(projectId)
-    await notificationRepository.create({
-      userId: task.assigneeId,
-      type: NotificationType.TASK_ASSIGNED,
-      title: 'notification.taskAssigned',
-      body: project ? `${task.title} · ${project.name}` : task.title,
-      linkUrl: `/dashboard/${workspaceSlug}/${projectId}`,
-    })
+    try {
+      const project = await projectService.getProject(projectId, userId)
+      await notificationService.notifyTaskAssigned(
+        task.assigneeId,
+        userId,
+        task.title,
+        project?.name ?? null,
+        `/dashboard/${workspaceSlug}/${projectId}`,
+      )
+    } catch { /* notifications are non-critical */ }
   }
 
   revalidatePath(`/dashboard/${workspaceSlug}/${projectId}`)
@@ -65,8 +65,7 @@ export async function updateTaskAction(
     : undefined
   const dueDateRaw = formData.get('dueDate') as string | null
 
-  // Check old assignee before updating
-  const oldTask = assigneeId !== undefined ? await taskRepository.findById(taskId) : null
+  const oldTask = assigneeId !== undefined ? await taskService.getTask(taskId, userId) : null
 
   const task = await taskService.updateTask(taskId, userId, {
     title,
@@ -77,21 +76,18 @@ export async function updateTaskAction(
     dueDate: dueDateRaw ? new Date(dueDateRaw + 'T12:00:00.000Z') : dueDateRaw === '' ? null : undefined,
   })
 
-  // Notify new assignee if changed and different from current user
   const newAssigneeId = task.assigneeId
-  if (
-    newAssigneeId &&
-    newAssigneeId !== oldTask?.assigneeId &&
-    newAssigneeId !== userId
-  ) {
-    const project = await projectRepository.findById(projectId)
-    await notificationRepository.create({
-      userId: newAssigneeId,
-      type: NotificationType.TASK_ASSIGNED,
-      title: 'notification.taskAssigned',
-      body: project ? `${task.title} · ${project.name}` : task.title,
-      linkUrl: `/dashboard/${workspaceSlug}/${projectId}`,
-    })
+  if (newAssigneeId && newAssigneeId !== oldTask?.assigneeId && newAssigneeId !== userId) {
+    try {
+      const project = await projectService.getProject(projectId, userId)
+      await notificationService.notifyTaskAssigned(
+        newAssigneeId,
+        userId,
+        task.title,
+        project?.name ?? null,
+        `/dashboard/${workspaceSlug}/${projectId}`,
+      )
+    } catch { /* notifications are non-critical */ }
   }
 
   revalidatePath(`/dashboard/${workspaceSlug}/${projectId}`)

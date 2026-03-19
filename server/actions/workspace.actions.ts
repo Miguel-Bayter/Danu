@@ -1,10 +1,10 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { WorkspaceRole, NotificationType } from '@prisma/client'
+import { WorkspaceRole } from '@prisma/client'
 import * as workspaceService from '@/server/services/workspace.service'
+import * as notificationService from '@/server/services/notification.service'
 import { requireAuth } from '@/server/lib/auth'
-import { notificationRepository } from '@/server/repositories/notification.repository'
 import { workspaceRepository } from '@/server/repositories/workspace.repository'
 
 export async function createWorkspaceAction(formData: FormData) {
@@ -29,26 +29,16 @@ export async function updateWorkspaceAction(workspaceId: string, formData: FormD
 export async function deleteWorkspaceAction(workspaceId: string) {
   const userId = await requireAuth()
 
-  // Get all members BEFORE deleting so we can notify them
   try {
     const workspace = await workspaceRepository.findById(workspaceId)
     if (workspace) {
-      const otherMemberIds = workspace.members
-        .map((m) => m.userId)
-        .filter((id) => id !== userId)
-
-      await Promise.all(
-        otherMemberIds.map((memberId) =>
-          notificationRepository.create({
-            userId: memberId,
-            type: NotificationType.WORKSPACE_DELETED,
-            title: 'notification.workspaceDeleted',
-            body: workspace.name,
-          }),
-        ),
+      await notificationService.notifyWorkspaceDeleted(
+        workspace.members.map((m) => m.userId),
+        userId,
+        workspace.name,
       )
     }
-  } catch { /* non-critical */ }
+  } catch { /* notifications are non-critical */ }
 
   await workspaceService.deleteWorkspace(workspaceId, userId)
   revalidatePath('/dashboard')
