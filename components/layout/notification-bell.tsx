@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef, useTransition } from 'react'
 import { createPortal } from 'react-dom'
+import { useRouter } from 'next/navigation'
 import {
   Bell, CheckCheck, UserPlus, FolderPlus, FolderX,
   LayoutGrid, LayoutGridIcon, Clock, AlertCircle, Trash2,
@@ -50,6 +51,7 @@ function relativeTime(date: Date, locale: string): string {
 
 export function NotificationBell({ userId }: { userId: string }) {
   const t = useTranslations('notification')
+  const router = useRouter()
   const [open, setOpen] = useState(false)
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [, startTransition] = useTransition()
@@ -114,9 +116,13 @@ export function NotificationBell({ userId }: { userId: string }) {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
   }
 
-  async function handleMarkRead(id: string) {
+  async function handleMarkRead(id: string, linkUrl?: string | null) {
     await markNotificationReadAction(id)
     setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)))
+    if (linkUrl) {
+      setOpen(false)
+      router.push(linkUrl)
+    }
   }
 
   async function handleDelete(e: React.MouseEvent, id: string) {
@@ -177,8 +183,8 @@ export function NotificationBell({ userId }: { userId: string }) {
                 key={n.id}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleMarkRead(n.id)}
-                onKeyDown={(e) => e.key === 'Enter' && handleMarkRead(n.id)}
+                onClick={() => handleMarkRead(n.id, n.linkUrl)}
+                onKeyDown={(e) => e.key === 'Enter' && handleMarkRead(n.id, n.linkUrl)}
                 className={`w-full text-left px-4 py-3 transition-colors group cursor-pointer
                             hover:bg-accent/60 relative
                             ${!n.read ? 'bg-primary/[0.035]' : ''}`}

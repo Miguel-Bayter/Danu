@@ -6,6 +6,7 @@ import * as taskService from '@/server/services/task.service'
 import { requireAuth } from '@/server/lib/auth'
 import { notificationRepository } from '@/server/repositories/notification.repository'
 import { taskRepository } from '@/server/repositories/task.repository'
+import { projectRepository } from '@/server/repositories/project.repository'
 
 export async function createTaskAction(
   projectId: string,
@@ -33,11 +34,12 @@ export async function createTaskAction(
 
   // Notify assignee if different from creator
   if (task.assigneeId && task.assigneeId !== userId) {
+    const project = await projectRepository.findById(projectId)
     await notificationRepository.create({
       userId: task.assigneeId,
       type: NotificationType.TASK_ASSIGNED,
       title: 'notification.taskAssigned',
-      body: task.title,
+      body: project ? `${task.title} · ${project.name}` : task.title,
       linkUrl: `/dashboard/${workspaceSlug}/${projectId}`,
     })
   }
@@ -82,11 +84,12 @@ export async function updateTaskAction(
     newAssigneeId !== oldTask?.assigneeId &&
     newAssigneeId !== userId
   ) {
+    const project = await projectRepository.findById(projectId)
     await notificationRepository.create({
       userId: newAssigneeId,
       type: NotificationType.TASK_ASSIGNED,
       title: 'notification.taskAssigned',
-      body: task.title,
+      body: project ? `${task.title} · ${project.name}` : task.title,
       linkUrl: `/dashboard/${workspaceSlug}/${projectId}`,
     })
   }
