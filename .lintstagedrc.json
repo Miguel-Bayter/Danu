@@ -1,0 +1,10 @@
+{
+  "*.{ts,tsx}": [
+    "eslint --fix",
+    "vitest related --run --passWithNoTests"
+  ],
+  "*.{js,mjs,cjs}": [
+    "eslint --fix"
+  ],
+  "*.{css,json,md}": []
+}
