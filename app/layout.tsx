@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Inter, Geist_Mono } from 'next/font/google'
 import { NextIntlClientProvider } from 'next-intl'
 import { getLocale, getMessages } from 'next-intl/server'
@@ -23,14 +23,15 @@ const geistMono = Geist_Mono({
   subsets: ['latin'],
 })
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+}
+
 export const metadata: Metadata = {
   title: 'Danu — Gestión de proyectos para equipos',
   description: 'Organiza proyectos, tareas y equipos con Danu.',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    viewportFit: 'cover', // safe-area-inset iOS (iPhone X+)
-  },
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

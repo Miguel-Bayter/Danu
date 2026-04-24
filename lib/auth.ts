@@ -12,10 +12,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   session: { strategy: 'jwt' },
   providers: [
     ...authConfig.providers,
-    Resend({
-      apiKey: process.env.AUTH_RESEND_KEY,
-      from: process.env.EMAIL_FROM ?? 'Danu <noreply@danu.app>',
-    }),
+    ...(process.env.AUTH_RESEND_KEY
+      ? [Resend({
+          apiKey: process.env.AUTH_RESEND_KEY,
+          from: process.env.EMAIL_FROM ?? 'Danu <noreply@danu.app>',
+        })]
+      : []),
     Credentials({
       credentials: { type: { type: 'text' } },
       async authorize(credentials) {

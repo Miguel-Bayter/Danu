@@ -143,3 +143,6 @@ $RECYCLE.BIN/
 *~
 .fuse_hidden*
 .Trash-*
+
+.vercel
+.env*.local
