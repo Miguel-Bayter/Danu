@@ -7,10 +7,12 @@ export const authConfig: NextAuthConfig = {
     GitHub({
       clientId: process.env.AUTH_GITHUB_ID!,
       clientSecret: process.env.AUTH_GITHUB_SECRET!,
+      allowDangerousEmailAccountLinking: true,
     }),
     Google({
       clientId: process.env.AUTH_GOOGLE_ID!,
       clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   pages: { signIn: '/sign-in', verifyRequest: '/verify-request' },
@@ -25,4 +27,6 @@ export const authConfig: NextAuthConfig = {
       return true
     },
   },
+  // Ensure trustHost is true for production (Vercel auto-detects from VERCEL_URL)
+  trustHost: true,
 }

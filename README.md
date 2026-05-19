@@ -279,7 +279,7 @@ CI runs on every push: `typecheck → lint → test → build`
 |---|---|
 | Auth.js v5 instead of Clerk | Open source, no account required, no credit card |
 | GitHub OAuth instead of Google | Simpler for developer portfolio audience |
-| JWT sessions instead of database sessions | Edge runtime compatibility (`proxy.ts`) |
+| JWT sessions instead of database sessions | Edge runtime compatibility (`middleware.ts`) |
 | Vercel Cron Jobs instead of Inngest | No extra account, included in Hobby plan |
 | Supabase Storage instead of Uploadthing | Already included in Supabase, no extra account |
 | CSS Grid for Gantt | `gantt-task-react` is incompatible with React 19 |
