@@ -2,6 +2,8 @@ import type { NextAuthConfig } from 'next-auth'
 import GitHub from 'next-auth/providers/github'
 import Google from 'next-auth/providers/google'
 
+const isProd = process.env.NODE_ENV === 'production'
+
 export const authConfig: NextAuthConfig = {
   providers: [
     GitHub({
@@ -16,6 +18,34 @@ export const authConfig: NextAuthConfig = {
     }),
   ],
   pages: { signIn: '/sign-in', verifyRequest: '/verify-request' },
+  cookies: {
+    sessionToken: {
+      name: `${isProd ? '__Secure-' : ''}next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: isProd,
+      },
+    },
+    callbackUrl: {
+      name: `${isProd ? '__Secure-' : ''}next-auth.callback-url`,
+      options: {
+        sameSite: 'lax',
+        path: '/',
+        secure: isProd,
+      },
+    },
+    csrfToken: {
+      name: 'next-auth.csrf-token',
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: isProd,
+      },
+    },
+  },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user
@@ -27,6 +57,5 @@ export const authConfig: NextAuthConfig = {
       return true
     },
   },
-  // Ensure trustHost is true for production (Vercel auto-detects from VERCEL_URL)
   trustHost: true,
 }

@@ -6,40 +6,10 @@ import { prisma } from '@/lib/prisma'
 import { authConfig } from '@/lib/auth.config'
 import { createId } from '@paralleldrive/cuid2'
 
-const isProd = process.env.NODE_ENV === 'production'
-
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(prisma),
   session: { strategy: 'jwt' },
-  cookies: {
-    sessionToken: {
-      name: `${isProd ? '__Secure-' : ''}next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: isProd,
-      },
-    },
-    callbackUrl: {
-      name: `${isProd ? '__Secure-' : ''}next-auth.callback-url`,
-      options: {
-        sameSite: 'lax',
-        path: '/',
-        secure: isProd,
-      },
-    },
-    csrfToken: {
-      name: 'next-auth.csrf-token',
-      options: {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: isProd,
-      },
-    },
-  },
   providers: [
     ...authConfig.providers,
     ...(process.env.AUTH_RESEND_KEY
